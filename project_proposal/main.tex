@@ -1,0 +1,490 @@
+\documentclass[12pt,a4paper]{article}
+
+% ---------- Packages ----------
+\usepackage[a4paper,top=0.75in,bottom=0.70in,left=0.85in,right=0.85in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{newtxtext,newtxmath} % Times-style font
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{ragged2e}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+\usepackage{parskip}
+
+% ---------- General formatting ----------
+\setstretch{1.08}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+
+\setlist[itemize]{
+    leftmargin=1.5em,
+    itemsep=2pt,
+    topsep=2pt,
+    parsep=0pt
+}
+
+% ---------- Headings ----------
+\titleformat{\section}
+  {\bfseries\fontsize{14}{17}\selectfont}
+  {\thesection.}{0.5em}{}
+\titlespacing*{\section}{0pt}{10pt}{5pt}
+
+\titleformat{\subsection}
+  {\bfseries\fontsize{12}{15}\selectfont}
+  {\thesubsection}{0.5em}{}
+\titlespacing*{\subsection}{0pt}{8pt}{4pt}
+
+% ---------- Page numbers ----------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% ---------- Tables ----------
+\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{5pt}
+
+\begin{document}
+
+% =========================================================
+% COVER PAGE
+% =========================================================
+\pagenumbering{gobble}
+\begin{titlepage}
+\centering
+\vspace*{0.9in}
+
+{\bfseries\fontsize{18}{23}\selectfont
+Smart City Civic Complaint and Management System\par}
+
+\vspace{0.3in}
+
+{\bfseries\fontsize{13}{17}\selectfont
+Project Proposal for UCS503P\par}
+
+\vspace{0.75in}
+
+{\bfseries Submitted to:}\par
+Nisha Thakur\par
+Thapar Institute of Engineering and Technology\par
+
+\vspace{0.35in}
+
+{\bfseries Submitted by:}\par
+Achintya Maurya [1024170429]\par
+Hittin Gupta [1024170437]\par
+
+\vfill
+Date: August 2026
+
+\end{titlepage}
+
+\justifying
+\section{Higher-order Goal}
+This project aims to improve the efficiency and transparency of civic issue management in an urban environment by providing a unified digital platform through which citizens can report civic problems and track their resolution.
+
+The immediate engineering objective is to transform the traditional complaint-handling process into a structured, trackable, and measurable software workflow connecting citi-zens, department officers, field workers, and city administrators.
+
+The proposed system will focus on common civic issues such as potholes, water leak-age, garbage accumulation, sewage problems, streetlight failures, electricity-related in-frastructure issues, park-related problems, and other public infrastructure complaints.
+
+\section{Time-to-Value}
+The system will be developed incrementally so that the core complaint workflow can be implemented and tested before advanced smart features are introduced.
+
+The first development increment will focus on the core citizen complaint submission and tracking workflow.
+
+Subsequent increments will introduce officer and worker workflows.
+
+Smart features such as priority assistance, duplicate detection, and automated classi-fication will be added after the basic workflow is stable.
+
+Testing and feedback will be performed throughout development rather than only at the end.
+
+Each increment should provide a usable improvement to the overall system.
+
+Success will be measured by whether the system can provide a complete and traceable path from complaint submission to resolution and citizen verification.
+
+\section{Problem Statement}
+Citizens in urban areas frequently face civic problems such as potholes, broken street-lights, water leakage, garbage accumulation, sewage issues, and damaged public infras-tructure.
+
+The existing complaint process can suffer from several problems: Fragmentation
+
+Citizens may report problems through different channels, making it difficult to main-tain a single record and complete history of a complaint.
+
+\textbf{Low Transparency}\par
+Citizens may not have a clear way to know whether their complaint has been received, verified, assigned, or resolved.
+
+\textbf{Slow Coordination}\par
+Different departments and field workers need a structured workflow to ensure that every complaint has clear ownership and responsibility.
+
+\textbf{Duplicate Complaints}\par
+Multiple citizens may report the same issue independently, resulting in duplicate records and unnecessary effort.
+
+\textbf{Priority Management}\par
+Not every complaint has the same urgency. A system should assist staff in identifying complaints that require higher attention.
+
+\textbf{Lack of Centralized Monitoring}\par
+City administrators require an overall view of complaints, departments, workers, res-olution performance, and pending issues.
+
+Therefore, there is a need for a centralized civic complaint management system that provides a complete and trackable workflow from reporting to resolution.
+
+\section{Proposed Solution}
+\subsection{Overview}
+We propose a web-based Smart City Civic Complaint and Management System consisting of the following major components:
+
+\textbf{Citizen Portal:} Citizens can register, submit complaints, upload photographs, provide location information, track complaints, verify resolution, provide feedback, and reopen unresolved complaints.
+
+\textbf{Officer Dashboard:} Department officers can review complaints, verify them, assign workers, monitor progress, and manage complaint status.
+
+\textbf{Worker Dashboard:} Field workers can view assigned tasks, accept work, update progress, upload before/after evidence, and mark work as completed.
+
+\textbf{Admin Dashboard:} Administrators can manage users, departments, workers, com-plaints, SLA monitoring, and city-level analytics.
+
+\textbf{Smart Layer:} The system can assist with complaint classification, duplicate detection, and priority calculation.
+
+\textbf{Notification Layer:} Users can receive relevant updates regarding complaint status.
+
+\textbf{Analytics and Maps:} The system can provide complaint and performance information and support location-based visualization.
+
+\subsection{Core Workflow}
+
+\begin{center}
+\small
+\textbf{Citizen}
+$\rightarrow$
+\textbf{Create Complaint}
+$\rightarrow$
+\textbf{Complaint Submitted}
+
+\vspace{3pt}
+$\downarrow$
+
+\vspace{3pt}
+\textbf{System Classification}
+$\rightarrow$
+\textbf{Priority Calculation}
+$\rightarrow$
+\textbf{Department Assignment}
+
+\vspace{3pt}
+$\downarrow$
+
+\vspace{3pt}
+\textbf{Officer Verification}
+$\rightarrow$
+\textbf{Worker Assignment}
+$\rightarrow$
+\textbf{Worker Accepts}
+
+\vspace{3pt}
+$\downarrow$
+
+\vspace{3pt}
+\textbf{Work Started}
+$\rightarrow$
+\textbf{Evidence Uploaded}
+$\rightarrow$
+\textbf{Resolved}
+
+\vspace{3pt}
+$\downarrow$
+
+\vspace{3pt}
+\textbf{Citizen Verification}
+$\rightarrow$
+\textbf{Closed}
+\end{center}
+
+\textit{If the citizen does not accept the resolution: Citizen Verification
+$\rightarrow$ Reopened $\rightarrow$ Assigned $\rightarrow$ Further Action.}
+
+Citizen
+
+Create Complaint Complaint Submitted System Classification Priority Calculation Department Assignment Officer Verification Worker Assignment Worker Accepts
+
+Work Started Evidence Uploaded Resolved
+
+Citizen Verification Closed
+
+If the citizen does not accept the resolution: Citizen Verification $\rightarrow$ Reopened $\rightarrow$ Assigned $\rightarrow$ Further Action
+
+\subsection{Operational Constraints}
+The system will initially be developed and tested in a controlled environment.
+
+Real government databases will not be integrated in the initial version.
+
+Real police/emergency dispatch will remain outside the initial scope.
+
+Real payment systems will not be required.
+
+Fully autonomous AI decision-making will not be implemented.
+
+Smart features will assist users and staff rather than completely replacing human decisions.
+
+The system should support additional departments and users in future versions.
+
+\section{Solution Approach}
+\subsection{Smart Complaint Assistance}
+\textbf{Classification}\par
+The system will assist in identifying the likely category of a complaint based on the submitted information. Example: "There is a large pothole near the main gate." $\rightarrow$ Category: Roads $\rightarrow$ Pothole.
+
+\textbf{Duplicate Detection}\par
+The system will identify potentially similar complaints using complaint description, category, and location. Potential duplicates will be shown for review rather than auto-matically deleting or rejecting complaints.
+
+\textbf{Priority Assistance}\par
+The system will assign or recommend an appropriate priority level such as Low, Medium, or High. The smart features are intended to assist the workflow and not make fully autonomous decisions.
+
+\subsection{Web Architecture}
+\textbf{Frontend}\par
+Citizen interface
+
+Officer dashboard
+
+Worker dashboard
+
+Admin dashboard
+
+Complaint forms
+
+Status tracking
+
+Analytics views Backend
+
+Authentication
+
+Complaint management
+
+Assignment logic
+
+Status transitions
+
+Smart feature integration
+
+Notifications
+
+APIs Database
+
+Users
+
+Departments
+
+Workers
+
+Complaints
+
+Categories
+
+Locations
+
+Complaint images
+
+Assignments
+
+Status history
+
+SLA information
+
+Notifications
+
+Feedback
+
+Escalations
+
+The project roadmap proposes React for the frontend, Python + FastAPI for the backend, PostgreSQL for relational data, and Python-based ML tools where required.
+
+\subsection{Development and Version Control}
+The project will use Git-based version control so that multiple team members can work on different components.
+
+frontend/
+
+backend/
+
+ml/
+
+database/
+
+docs/
+
+tests/
+
+scripts/
+
+Documentation will include SRS, DFD, ER Diagram, UML, architecture, test plan, test cases, and project reports.
+
+\section{Evaluation Criteria}
+\subsection{Primary Evaluation Criteria}
+\textbf{Complaint Processing Time}\par
+Measure the time between Complaint Submission $\rightarrow$ First Processing/Verification and Complaint Submission $\rightarrow$ Resolution. The system will record timestamps for important status transitions so that processing performance can be measured.
+
+\subsection{Secondary Evaluation Criteria}
+Percentage of complaints successfully processed
+
+Average resolution time
+
+Number of pending complaints
+
+Number of overdue complaints
+
+Number of potential duplicate complaints detected
+
+Citizen feedback
+
+Complaint status visibility
+
+Worker/department performance
+
+System availability during testing
+
+Accuracy of smart classification assistance
+
+\subsection{Validation Plan}
+Citizens
+
+Department officers
+
+Field workers
+
+Administrators
+
+Testing will cover the complete workflow: Complaint Creation $\rightarrow$ Verification $\rightarrow$ Assign-ment $\rightarrow$ Work $\rightarrow$ Evidence $\rightarrow$ Resolution $\rightarrow$ Citizen Verification. The project will also include functional testing, integration testing, and system-level testing.
+
+\section{Scalability}
+The system should be designed so that additional departments, users, workers, complaint categories, and complaints can be added without redesigning the entire system.
+
+Modular frontend and backend components
+
+Relational database design
+
+Proper database relationships
+
+Pagination for large complaint lists
+
+Search and filtering
+
+Database indexing where required
+
+Role-based access
+
+Modular smart services
+
+REST APIs
+
+\section{Technology and Tool Availability}
+\textbf{Frontend}\par
+React Backend
+
+Python + FastAPI Database PostgreSQL Smart/AI Layer
+
+Python, scikit-learn and required NLP libraries Version Control
+
+Git / GitHub Development Environment
+
+Localhost during initial development Future Deployment
+
+Cloud deployment can be considered after the core system is stable.
+
+\section{Project Scope and Deliverables}
+\subsection{Initial Deliverable}
+Citizen registration and login
+
+Citizen complaint submission
+
+Complaint ID generation
+
+Category and description
+
+Photo upload
+
+Location information
+
+Complaint status tracking
+
+Officer complaint verification
+
+Worker assignment
+
+Worker status updates
+
+Resolution submission
+
+Citizen verification
+
+This establishes the Minimum Viable Product of the system.
+
+\subsection{Subsequent Deliverables}
+SLA monitoring
+
+Escalation
+
+Notifications
+
+Admin analytics
+
+Maps
+
+Duplicate detection
+
+Smart classification
+
+Priority assistance
+
+Before/after evidence
+
+Feedback
+
+Complaint reopening
+
+Green IT metrics
+
+Security improvements
+
+Performance optimization
+
+Testing and documentation
+
+\section{Risks and Mitigations}
+
+\begin{longtable}{@{}p{0.37\textwidth} p{0.57\textwidth}@{}}
+\toprule
+\textbf{Risk} & \textbf{Mitigation} \\
+\midrule
+\endhead
+Project becomes too large & Freeze the initial scope and develop features in-
+crementally \\
+Smart features are difficult to im-
+plement & Begin with simple, explainable approaches \\
+Duplicate detection produces in-
+correct results & Show suggestions to staff instead of automati-
+cally rejecting complaints \\
+Multiple team members create in-
+tegration conflicts & Use Git branches and defined module owner-
+ship \\
+Database design changes later & Finalize ER design before major development \\
+Security problems & Use role-based access and authentication \\
+Large number of complaints affects
+performance & Use	pagination,	indexing,	and	optimized
+queries \\
+Testing is delayed until the end & Perform testing throughout development \\
+Time constraints & Prioritize the core complaint workflow before
+advanced features \\
+Deployment problems & First develop and test locally before deploy-
+ment \\
+
+\bottomrule
+\end{longtable}
+\section{Summary}
+The Smart City Civic Complaint and Management System proposes a centralized web-based platform for managing civic complaints from initial citizen reporting to final reso-lution and verification.
+
+The system will connect citizens, department officers, field workers, and adminis-trators through a structured workflow. It will provide complaint tracking, worker as-signment, status management, evidence collection, citizen verification, notifications, SLA monitoring, and analytics.
+
+The project will additionally introduce smart assistance through classification, dupli-cate detection, and priority calculation while keeping human users involved in important decisions.
+
+The development approach will follow Software Engineering practices including re-quirement engineering, SRS preparation, system modeling, modular architecture, version control, testing, documentation, and incremental development.
+
+The initial focus will remain on building a reliable end-to-end complaint workflow. Smart features, analytics, maps, notifications, optimization, and deployment will be in-troduced progressively after the core system is stable.
+
+\end{document}
