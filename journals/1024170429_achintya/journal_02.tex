@@ -1,0 +1,250 @@
+
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{newtxtext,newtxmath}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+\setstretch{1.12}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.5em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+\begin{document}
+
+\begin{titlepage}
+\centering
+\vspace*{0.8in}
+
+{\Large\bfseries Smart City Civic Complaint and Management System\par}
+\vspace{0.25in}
+{\large\bfseries Software Engineering Project Journal -- 02\par}
+
+\vspace{0.8in}
+
+\textbf{Submitted to:}\par
+Nisha Thakur\par
+Thapar Institute of Engineering and Technology\par
+
+\vspace{0.45in}
+
+\textbf{Submitted by:}\par
+Achintya Maurya [1024170429]\par
+
+
+\vfill
+
+\textbf{Journal 02}\par
+Gantt Chart and Use Case Diagram\par
+September 2026
+
+\end{titlepage}
+
+\section{Objective}
+
+The objective of this journal is to document the project planning and functional modelling activities completed after the project proposal.
+
+The main objectives were:
+
+\begin{itemize}[leftmargin=*]
+\item To convert the proposed project timeline into a Gantt Chart aligned with the course W1--W20 schedule.
+\item To identify the major actors who will interact with the system.
+\item To identify the major use cases and responsibilities associated with each actor.
+\item To represent the system boundary and actor--system interactions using a Use Case Diagram.
+\item To organize the completed artifacts in the project repository for future development and documentation.
+\end{itemize}
+
+\section{Work Completed}
+
+After completing the Project Proposal documented in Journal 01, the next project activity was system planning and functional modelling.
+
+Two major Software Engineering artifacts were completed:
+
+\begin{enumerate}[leftmargin=*]
+\item Gantt Chart
+\item Use Case Diagram
+\end{enumerate}
+
+These artifacts were created before starting implementation so that the development work has a defined schedule and a clear understanding of the system's functional interactions.
+
+\section{Gantt Chart}
+
+\subsection{Purpose}
+
+A Gantt Chart was prepared to convert the project plan into a week-by-week development schedule.
+
+The chart is aligned with the course timeline from W1 to W20. It represents activities such as project planning, requirements analysis, UML and system design, core development, prototype testing, improvement, advanced features, final testing, and final submission.
+
+\subsection{Planning Approach}
+
+The project follows the incremental approach defined in the proposal. The core complaint workflow is prioritized first, while advanced smart features are planned for later increments.
+
+The major academic milestones represented in the chart are:
+
+\begin{itemize}[leftmargin=*]
+\item W4 -- Project Proposal + Report Submission
+\item W7 -- Prototype + Report Submission
+\item W8 -- Improvement Plan
+\item W9--W10 -- MST Week
+\item W11--W12 -- Progress Monitoring
+\item W13 -- Buffer
+\item W14 -- Progress Monitoring
+\item W15 -- Diwali Break
+\item W16 -- Progress Monitoring over the second prototype
+\item W17 -- Final Prototype + Presentation + Report Submission
+\item W18 -- Assessment Week (Buffer)
+\item W19--W20 -- EST Week
+\end{itemize}
+
+The Gantt Chart also allows activities to overlap when they can be performed in parallel. For example, design activities and preparation for development can occur during the same period.
+
+\subsection{Outcome}
+
+The Gantt Chart provides a clear schedule for the project and helps identify when each major activity is expected to be performed. It also provides a reference for monitoring progress in later journals.
+
+\section{Use Case Diagram}
+
+\subsection{Purpose}
+
+A Use Case Diagram was prepared to model the functional relationship between the system and its external actors.
+
+The proposed system connects citizens, department officers, field workers, and administrators through a structured complaint-management workflow.
+
+\subsection{Identified Actors}
+
+\begin{longtable}{p{0.25\textwidth} p{0.65\textwidth}}
+\toprule
+\textbf{Actor} & \textbf{Main Responsibilities} \\
+\midrule
+Citizen &
+Register/login, submit complaints, track complaint status, verify resolution, provide feedback, and reopen complaints. \\
+
+Department Officer &
+Review and verify complaints, assign workers, monitor progress, and manage complaint status. \\
+
+Field Worker &
+View assigned tasks, accept work, update work progress, upload evidence, and mark work as completed. \\
+
+Administrator &
+Manage users, departments, workers, and monitor complaints. \\
+\bottomrule
+\end{longtable}
+
+\subsection{Main Use Cases}
+
+The major use cases represented in the diagram include:
+
+\begin{itemize}[leftmargin=*]
+\item Register / Login
+\item Submit Complaint
+\item Track Complaint Status
+\item Verify Resolution
+\item Provide Feedback
+\item Reopen Complaint
+\item Select Category
+\item Enter Description
+\item Provide Location
+\item Generate Complaint ID
+\item Upload Photograph
+\item Review Complaint
+\item Verify Complaint
+\item Assign Worker
+\item Monitor Progress
+\item Manage Complaint Status
+\item View Assigned Tasks
+\item Accept Work
+\item Update Work Progress
+\item Upload Evidence
+\item Mark Work Completed
+\item Manage Users
+\item Manage Departments
+\item Manage Workers
+\item Monitor Complaints
+\end{itemize}
+
+The diagram also represents the planned Smart Assistance layer containing Smart Classification, Duplicate Detection, and Priority Calculation. These features are planned for later increments after the core workflow is stable.
+
+\section{Core Workflow Identified}
+
+The functional model establishes the following main workflow:
+
+\[
+\text{Citizen} \rightarrow
+\text{Complaint Submission} \rightarrow
+\text{Officer Verification} \rightarrow
+\text{Worker Assignment} \rightarrow
+\text{Work and Evidence} \rightarrow
+\text{Resolution} \rightarrow
+\text{Citizen Verification}
+\]
+
+This workflow is consistent with the project proposal's objective of creating a complete and traceable path from complaint creation to resolution and citizen verification.
+
+\section{Repository Organization}
+
+The completed artifacts were organized in the repository using separate folders for visual assets and documentation:
+
+\begin{verbatim}
+assets/
+    gantt-chart.png
+    use-case.png
+
+docs/
+    gantt-chart.pdf
+    use-case.pdf
+\end{verbatim}
+
+The PNG files are used as visual assets, while the PDF versions provide printable/documentation copies.
+
+\section{Result}
+
+The following work has been completed in this journal:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{p{0.62\textwidth} p{0.20\textwidth}}
+\toprule
+\textbf{Activity} & \textbf{Status} \\
+\midrule
+Project timeline planned & Completed \\
+Gantt Chart prepared & Completed \\
+System actors identified & Completed \\
+Major use cases identified & Completed \\
+Use Case Diagram prepared & Completed \\
+Artifacts organized in repository & Completed \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Learning / Engineering Understanding}
+
+This activity helped establish that Software Engineering involves planning and modelling the system before implementation.
+
+The Gantt Chart provides a project-management view of \emph{when} work will be performed, while the Use Case Diagram provides a functional view of \emph{who} interacts with the system and \emph{what} they can do.
+
+These artifacts will be used as inputs for the next stages of requirements and system design.
+
+\section{Conclusion}
+
+Journal 02 documents the completion of the Gantt Chart and Use Case Diagram for the Smart City Civic Complaint and Management System.
+
+The project now has a defined W1--W20 development schedule and a functional model covering citizens, department officers, field workers, and administrators. The core complaint workflow has been identified, while advanced smart features remain planned for later increments.
+
+The next project activities will build on these models rather than changing the already established project scope without justification.
+
+\end{document}
