@@ -1,12 +1,22 @@
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { useState } from "react";
+
 import Register from "./pages/Register";
+import CitizenDashboard from "./pages/citizen/CitizenDashboard";
+import SubmitComplaint from "./pages/citizen/SubmitComplaint";
+import MyComplaints from "./pages/citizen/MyComplaints";
+import ComplaintDetails from "./pages/citizen/ComplaintDetails";
+import OfficerDashboard from "./pages/officer/OfficerDashboard";
+
 import "./App.css";
 
 function Login() {
+  const [role, setRole] = useState("citizen");
+
   return (
     <div className="app">
       <div className="login-container">
-        {/* Left side */}
+        {/* Left Side */}
         <div className="login-info">
           <h1>Smart City</h1>
 
@@ -18,17 +28,19 @@ function Login() {
           </p>
         </div>
 
-        {/* Right side */}
+        {/* Right Side */}
         <div className="login-box">
           <h2>Welcome Back</h2>
 
           <p className="login-subtitle">Login to your account</p>
 
           <form>
+            {/* Email */}
             <label htmlFor="email">Email</label>
 
             <input type="email" id="email" placeholder="Enter your email" />
 
+            {/* Password */}
             <label htmlFor="password">Password</label>
 
             <input
@@ -37,9 +49,33 @@ function Login() {
               placeholder="Enter your password"
             />
 
-            <button type="submit">Login</button>
+            {/* Role Selection */}
+            <div className="role-selection">
+              <label htmlFor="role">Login As</label>
+
+              <select
+                id="role"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+              >
+                <option value="citizen">Citizen</option>
+
+                <option value="officer">Officer</option>
+              </select>
+            </div>
+
+            {/* Login Button */}
+            <Link
+              to={
+                role === "citizen" ? "/citizen/dashboard" : "/officer/dashboard"
+              }
+              className="login-button"
+            >
+              Login
+            </Link>
           </form>
 
+          {/* Register */}
           <p className="register-text">
             Don't have an account? <Link to="/register">Register</Link>
           </p>
@@ -53,9 +89,25 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Login */}
         <Route path="/" element={<Login />} />
 
+        {/* Register */}
         <Route path="/register" element={<Register />} />
+
+        {/* ================= CITIZEN ================= */}
+
+        <Route path="/citizen/dashboard" element={<CitizenDashboard />} />
+
+        <Route path="/citizen/submit" element={<SubmitComplaint />} />
+
+        <Route path="/citizen/complaints" element={<MyComplaints />} />
+
+        <Route path="/citizen/complaint/:id" element={<ComplaintDetails />} />
+
+        {/* ================= OFFICER ================= */}
+
+        <Route path="/officer/dashboard" element={<OfficerDashboard />} />
       </Routes>
     </BrowserRouter>
   );
