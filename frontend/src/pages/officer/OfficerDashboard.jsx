@@ -1,32 +1,25 @@
 import { Link } from "react-router-dom";
+import { useComplaints } from "../../context/ComplaintContext";
 
 function OfficerDashboard() {
-  const complaints = [
-    {
-      id: "CMP1001",
-      title: "Garbage Collection Issue",
-      category: "Garbage / Waste",
-      location: "Sector 15",
-      date: "05 September 2026",
-      status: "Pending",
-    },
-    {
-      id: "CMP1002",
-      title: "Street Light Not Working",
-      category: "Street Light",
-      location: "Sector 21",
-      date: "03 September 2026",
-      status: "In Progress",
-    },
-    {
-      id: "CMP1003",
-      title: "Road Damage",
-      category: "Road Damage",
-      location: "Sector 10",
-      date: "01 September 2026",
-      status: "Resolved",
-    },
-  ];
+  // Get complaints from shared ComplaintContext
+  const { complaints } = useComplaints();
+
+  // Calculate statistics dynamically
+  const totalComplaints = complaints.length;
+
+  const pendingComplaints = complaints.filter(
+    (complaint) => complaint.status === "Pending",
+  ).length;
+
+  const inProgressComplaints = complaints.filter(
+    (complaint) => complaint.status === "In Progress",
+  ).length;
+
+  const resolvedComplaints = complaints.filter(
+    (complaint) =>
+      complaint.status === "Resolved" || complaint.status === "Completed",
+  ).length;
 
   return (
     <div className="officer-dashboard">
@@ -36,6 +29,7 @@ function OfficerDashboard() {
 
         <div className="officer-nav-right">
           <span>Officer</span>
+
           <Link to="/">Logout</Link>
         </div>
       </nav>
@@ -45,6 +39,7 @@ function OfficerDashboard() {
         <div className="officer-header">
           <div>
             <h1>Officer Dashboard</h1>
+
             <p>Review, verify and manage citizen complaints.</p>
           </div>
         </div>
@@ -53,22 +48,26 @@ function OfficerDashboard() {
         <div className="officer-stats">
           <div className="officer-stat-card">
             <h3>Total Complaints</h3>
-            <strong>3</strong>
+
+            <strong>{totalComplaints}</strong>
           </div>
 
           <div className="officer-stat-card pending-stat">
             <h3>Pending Verification</h3>
-            <strong>1</strong>
+
+            <strong>{pendingComplaints}</strong>
           </div>
 
           <div className="officer-stat-card progress-stat">
             <h3>In Progress</h3>
-            <strong>1</strong>
+
+            <strong>{inProgressComplaints}</strong>
           </div>
 
           <div className="officer-stat-card resolved-stat">
             <h3>Resolved</h3>
-            <strong>1</strong>
+
+            <strong>{resolvedComplaints}</strong>
           </div>
         </div>
 
@@ -76,6 +75,7 @@ function OfficerDashboard() {
         <section className="officer-complaints">
           <div className="section-heading">
             <h2>Recent Complaints</h2>
+
             <span>Manage complaints</span>
           </div>
 

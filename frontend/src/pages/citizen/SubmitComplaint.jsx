@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "../../App.css";
+import { useComplaints } from "../../context/ComplaintContext";
 
 function SubmitComplaint() {
+  const { addComplaint, complaints } = useComplaints();
+
   // Stores the information entered by the citizen
   const [formData, setFormData] = useState({
     category: "",
@@ -28,10 +31,76 @@ function SubmitComplaint() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Generate a temporary complaint ID
-    const newComplaintId = "CMP" + Math.floor(1000 + Math.random() * 9000);
+    /*
+      Generate a complaint ID.
 
+      We use the current number of complaints so that
+      newly submitted complaints continue after the
+      existing prototype complaints.
+    */
+    const newComplaintNumber = 1001 + complaints.length;
+
+    const newComplaintId = `CMP${newComplaintNumber}`;
+
+    // Create the new complaint object
+    const newComplaint = {
+      id: newComplaintId,
+
+      // Create a title from the selected category
+      title:
+        formData.category === "Other"
+          ? "Other Civic Issue"
+          : `${formData.category} Issue`,
+
+      category:
+        formData.category === "Garbage" ? "Garbage / Waste" : formData.category,
+
+      description: formData.description,
+
+      location: formData.location,
+
+      date: new Date().toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      }),
+
+      // Every newly submitted complaint starts as Pending
+      status: "Pending",
+
+      // Worker-related information
+      assignedWorker: null,
+      progress: 0,
+      workNotes: "",
+      evidence: null,
+
+      // Citizen verification
+      citizenVerified: false,
+
+      // Photograph submitted by citizen
+      photograph: formData.photograph ? formData.photograph.name : null,
+
+      // Temporary citizen information
+      citizen: "Current Citizen",
+      email: "citizen@example.com",
+    };
+
+    // Add complaint to shared ComplaintContext
+    addComplaint(newComplaint);
+
+    // Display the generated complaint ID
     setComplaintId(newComplaintId);
+
+    // Clear the form after successful submission
+    setFormData({
+      category: "",
+      description: "",
+      location: "",
+      photograph: null,
+    });
+
+    // Reset the file input
+    document.getElementById("photograph").value = "";
   };
 
   return (
@@ -149,7 +218,7 @@ function SubmitComplaint() {
               </p>
 
               <p>
-                <strong>Status:</strong> Submitted
+                <strong>Status:</strong> Pending
               </p>
 
               <Link to="/citizen/dashboard" className="dashboard-button">

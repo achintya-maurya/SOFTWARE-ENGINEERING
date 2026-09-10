@@ -1,12 +1,21 @@
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import { useState } from "react";
 
 import Register from "./pages/Register";
+
 import CitizenDashboard from "./pages/citizen/CitizenDashboard";
 import SubmitComplaint from "./pages/citizen/SubmitComplaint";
 import MyComplaints from "./pages/citizen/MyComplaints";
 import ComplaintDetails from "./pages/citizen/ComplaintDetails";
+
 import OfficerDashboard from "./pages/officer/OfficerDashboard";
+import ComplaintReview from "./pages/officer/ComplaintReview";
+
+import WorkerDashboard from "./pages/worker/WorkerDashboard";
+import WorkerTaskDetails from "./pages/worker/WorkerTaskDetails";
+
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminComplaintDetails from "./pages/admin/AdminComplaintDetails";
 
 import "./App.css";
 
@@ -61,13 +70,23 @@ function Login() {
                 <option value="citizen">Citizen</option>
 
                 <option value="officer">Officer</option>
+
+                <option value="worker">Field Worker</option>
+
+                <option value="admin">Administrator</option>
               </select>
             </div>
 
             {/* Login Button */}
             <Link
               to={
-                role === "citizen" ? "/citizen/dashboard" : "/officer/dashboard"
+                role === "citizen"
+                  ? "/citizen/dashboard"
+                  : role === "officer"
+                    ? "/officer/dashboard"
+                    : role === "worker"
+                      ? "/worker/dashboard"
+                      : "/admin/dashboard"
               }
               className="login-button"
             >
@@ -87,29 +106,42 @@ function Login() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Login */}
-        <Route path="/" element={<Login />} />
+    <Routes>
+      {/* ================= LOGIN ================= */}
 
-        {/* Register */}
-        <Route path="/register" element={<Register />} />
+      <Route path="/" element={<Login />} />
 
-        {/* ================= CITIZEN ================= */}
+      {/* ================= REGISTER ================= */}
 
-        <Route path="/citizen/dashboard" element={<CitizenDashboard />} />
+      <Route path="/register" element={<Register />} />
 
-        <Route path="/citizen/submit" element={<SubmitComplaint />} />
+      {/* ================= CITIZEN ================= */}
 
-        <Route path="/citizen/complaints" element={<MyComplaints />} />
+      <Route path="/citizen/dashboard" element={<CitizenDashboard />} />
 
-        <Route path="/citizen/complaint/:id" element={<ComplaintDetails />} />
+      <Route path="/citizen/submit" element={<SubmitComplaint />} />
 
-        {/* ================= OFFICER ================= */}
+      <Route path="/citizen/complaints" element={<MyComplaints />} />
 
-        <Route path="/officer/dashboard" element={<OfficerDashboard />} />
-      </Routes>
-    </BrowserRouter>
+      <Route path="/citizen/complaint/:id" element={<ComplaintDetails />} />
+
+      {/* ================= OFFICER ================= */}
+
+      <Route path="/officer/dashboard" element={<OfficerDashboard />} />
+
+      <Route path="/officer/complaint/:id" element={<ComplaintReview />} />
+
+      {/* ================= FIELD WORKER ================= */}
+
+      <Route path="/worker/dashboard" element={<WorkerDashboard />} />
+
+      <Route path="/worker/task/:id" element={<WorkerTaskDetails />} />
+
+      {/* ================= ADMIN ================= */}
+
+      <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      <Route path="/admin/complaint/:id" element={<AdminComplaintDetails />} />
+    </Routes>
   );
 }
 

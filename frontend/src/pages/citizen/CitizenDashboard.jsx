@@ -5,10 +5,14 @@ function CitizenDashboard() {
   return (
     <div className="dashboard">
       {/* Navigation Bar */}
-      <nav className="navbar">
-        <div className="navbar-brand">Smart City</div>
+      <nav className="citizen-navbar">
+        <h2>Smart City</h2>
 
-        <div className="navbar-user">Welcome, Citizen</div>
+        <div className="citizen-nav-right">
+          <span>Citizen</span>
+
+          <Link to="/">Logout</Link>
+        </div>
       </nav>
 
       {/* Main Content */}
