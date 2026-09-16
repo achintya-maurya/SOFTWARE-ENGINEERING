@@ -1,0 +1,520 @@
+\documentclass[12pt,a4paper]{article}
+
+% -------------------- Packages --------------------
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+
+% -------------------- Page Formatting --------------------
+\onehalfspacing
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+\titleformat{\section}
+{\large\bfseries}
+{\thesection.}
+{0.5em}
+{}
+
+\titleformat{\subsection}
+{\normalsize\bfseries}
+{\thesubsection}
+{0.5em}
+{}
+
+\setlist[itemize]{
+    leftmargin=1.5em,
+    itemsep=3pt
+}
+
+% -------------------- Header / Footer --------------------
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textbf{Journal 3}}
+\rhead{\textbf{Smart City Civic Complaint System}}
+\cfoot{\thepage}
+
+% =========================================================
+\begin{document}
+% =========================================================
+
+\begin{center}
+    {\Large \textbf{JOURNAL 3}}\\[8pt]
+    {\large \textbf{Frontend Implementation}}\\[6pt]
+    {\normalsize \textbf{Smart City Civic Complaint and Management System}}
+\end{center}
+
+\vspace{12pt}
+
+\begin{tabular}{|p{0.28\textwidth}|p{0.62\textwidth}|}
+\hline
+\textbf{Project} &
+Smart City Civic Complaint and Management System \\ \hline
+
+\textbf{Development Stage} &
+Frontend Prototype Implementation \\ \hline
+
+\textbf{Technology Used} &
+React, Vite, React Router, JavaScript, CSS \\ \hline
+
+\textbf{State Management} &
+React Context API \\ \hline
+
+
+\textbf{Student} &
+Hittin \\ \hline
+\end{tabular}
+
+% =========================================================
+\section{Objective}
+% =========================================================
+
+The work primarily focused on developing the Field Worker interface and the
+Administrator interface. The Field Worker interface was designed to support
+task acceptance, work progress tracking, evidence submission, and task
+completion. The Administrator interface was developed to provide an overview
+of complaints and their current processing status.
+
+% =========================================================
+\section{Development Environment and Technologies}
+% =========================================================
+
+The frontend components were developed using the following technologies:
+
+\begin{itemize}
+    \item \textbf{React} -- used for creating reusable and interactive
+    frontend components.
+    
+    \item \textbf{Vite} -- used as the frontend development environment and
+    build tool.
+    
+    \item \textbf{JavaScript} -- used for implementing component logic and
+    user interactions.
+    
+    \item \textbf{React Router} -- used for navigation between dashboard and
+    task-related pages.
+    
+    \item \textbf{CSS} -- used for designing dashboards, cards, buttons,
+    progress indicators, forms, and status displays.
+    
+    \item \textbf{React Context API} -- used for accessing and updating
+    shared complaint information between frontend components.
+\end{itemize}
+
+% =========================================================
+\section{Field Worker Dashboard}
+% =========================================================
+
+The Field Worker Dashboard was developed to provide field workers with a
+centralized interface for viewing their assigned civic complaint tasks.
+
+The dashboard provides information about assigned work and the current
+progress of tasks.
+
+The main sections include:
+
+\begin{itemize}
+    \item Assigned Tasks
+    \item In Progress Tasks
+    \item Completed Tasks
+    \item Complaint task information
+    \item Task status
+    \item Location information
+    \item Task details navigation
+\end{itemize}
+
+Each task provides a mechanism to open its detailed task interface.
+
+This allows the field worker to move from the dashboard to the individual
+task workflow.
+
+% =========================================================
+\section{Worker Task Details}
+% =========================================================
+
+A separate \textit{Worker Task Details} page was developed for handling the
+complete lifecycle of an assigned field task.
+
+The task details interface displays important information about the civic
+complaint and provides controls for updating the work status.
+
+The implemented workflow is:
+
+\begin{center}
+\textbf{Assigned}
+$\rightarrow$
+\textbf{Accepted}
+$\rightarrow$
+\textbf{In Progress}
+$\rightarrow$
+\textbf{Completed}
+\end{center}
+
+Each stage represents a different point in the field-worker workflow.
+
+% =========================================================
+\section{Accept Task}
+% =========================================================
+
+An \textit{Accept Task} operation was implemented for field workers.
+
+When a worker accepts an assigned task, the task status changes from
+\textit{Assigned} to \textit{Accepted}.
+
+This action represents that the field worker has received and accepted the
+responsibility for performing the assigned work.
+
+The interface dynamically reflects the updated status after the action.
+
+% =========================================================
+\section{Start Work}
+% =========================================================
+
+After accepting a task, the field worker can start the assigned work.
+
+The \textit{Start Work} operation changes the task status to
+\textit{In Progress}.
+
+Initial progress is also set when work begins.
+
+This provides a clear distinction between a task that has only been accepted
+and a task on which actual field work has started.
+
+% =========================================================
+\section{Work Progress Tracking}
+% =========================================================
+
+A progress tracking section was implemented to allow the field worker to
+update the percentage of work completed.
+
+A progress slider was provided in the task interface.
+
+The progress value represents the current completion level of the field
+work.
+
+For example:
+
+\begin{itemize}
+    \item 0\% -- Work has not started.
+    \item 10\% -- Work has recently started.
+    \item 50\% -- Approximately half of the work is completed.
+    \item 100\% -- Work is completely finished.
+\end{itemize}
+
+The interface also contains a visual progress bar so that the current
+completion percentage can be understood easily.
+
+% =========================================================
+\section{Work Notes}
+% =========================================================
+
+A work-notes section was implemented to allow the field worker to provide
+additional information about the performed work.
+
+The worker can enter notes describing activities carried out during the
+resolution process.
+
+Examples of information that can be recorded include:
+
+\begin{itemize}
+    \item Work performed.
+    \item Issue identified at the location.
+    \item Materials or actions used for resolution.
+    \item Additional observations.
+\end{itemize}
+
+These notes provide supporting information before the task is marked as
+completed.
+
+% =========================================================
+\section{Evidence Upload}
+% =========================================================
+
+An evidence-upload interface was implemented for the field worker.
+
+The worker can select an evidence file after carrying out the assigned work.
+
+The interface displays the selected file so that the worker can verify that
+evidence has been attached.
+
+Evidence is intended to support the completion of a civic complaint by
+providing a record of the work performed.
+
+At the current frontend stage, the evidence file is handled through the
+frontend interface and is not permanently stored in a backend database.
+
+% =========================================================
+\section{Task Completion Validation}
+% =========================================================
+
+Validation was implemented before allowing a field worker to complete a
+task.
+
+The task cannot be marked as completed unless the required work information
+has been provided.
+
+The completion condition requires:
+
+\begin{itemize}
+    \item Work progress to reach 100\%.
+    \item Work notes to be entered.
+\end{itemize}
+
+This prevents a task from being marked as completed prematurely.
+
+The validation provides a basic frontend-level control for maintaining the
+correct task workflow.
+
+% =========================================================
+\section{Complete Task}
+% =========================================================
+
+After the work progress reaches 100\% and the required work notes have been
+provided, the field worker can select the \textit{Complete Task} operation.
+
+The task status is then changed to:
+
+\begin{center}
+\textbf{Completed}
+\end{center}
+
+The completed-task interface provides a clear indication that the field
+work has reached its final stage.
+
+This status can subsequently be used by the complaint workflow to indicate
+that the resolution is ready for further processing.
+
+% =========================================================
+\section{Worker Interface Styling}
+% =========================================================
+
+CSS styling was implemented for the Field Worker interface to improve
+readability and usability.
+
+The styling covers:
+
+\begin{itemize}
+    \item Worker dashboard layout.
+    \item Task cards.
+    \item Status indicators.
+    \item Progress slider.
+    \item Progress bar.
+    \item Work-notes section.
+    \item Evidence-upload section.
+    \item File selection display.
+    \item Task action buttons.
+    \item Completed-task interface.
+\end{itemize}
+
+The interface was tested in the browser to verify that the different task
+states and controls were displayed correctly.
+
+% =========================================================
+\section{Administrator Dashboard}
+% =========================================================
+
+An Administrator Dashboard was developed to provide an overall view of the
+complaint management system.
+
+The administrator can view complaint information and monitor the current
+state of complaints through a centralized dashboard.
+
+The dashboard displays complaint-related statistics and a complaint list.
+
+% =========================================================
+\section{Administrator Statistics}
+% =========================================================
+
+Dynamic complaint statistics were implemented in the Administrator
+Dashboard.
+
+The dashboard calculates the number of complaints belonging to different
+status categories.
+
+The implemented statistics include:
+
+\begin{itemize}
+    \item Total Complaints
+    \item Pending Complaints
+    \item In Progress Complaints
+    \item Completed Complaints
+    \item Resolved Complaints
+    \item Reopened Complaints
+\end{itemize}
+
+These values are calculated from the complaint collection available through
+the shared frontend state.
+
+Therefore, the displayed values change when complaint information changes.
+
+% =========================================================
+\section{Administrator Complaint Management View}
+% =========================================================
+
+A complaint listing was implemented in the Administrator Dashboard.
+
+For each complaint, the administrator can view important information such
+as:
+
+\begin{itemize}
+    \item Complaint ID
+    \item Complaint title
+    \item Complaint category
+    \item Location
+    \item Submission date
+    \item Current status
+    \item Assigned worker
+\end{itemize}
+
+This provides the administrator with a consolidated view of complaints
+being handled by the system.
+
+% =========================================================
+\section{Shared State Integration}
+% =========================================================
+
+The Administrator Dashboard was connected with the shared complaint state
+implemented using React Context API.
+
+The dashboard obtains the complaint collection using the
+\texttt{useComplaints()} hook.
+
+The shared state contains information such as:
+
+\begin{itemize}
+    \item Complaint status
+    \item Assigned worker
+    \item Work progress
+    \item Work notes
+    \item Evidence information
+    \item Citizen verification status
+\end{itemize}
+
+This allows the administrator interface to display the current frontend
+state of complaints rather than maintaining a completely separate complaint
+dataset.
+
+% =========================================================
+\section{Frontend Navigation}
+% =========================================================
+
+The Field Worker and Administrator interfaces were connected to the
+application routing structure.
+
+The major routes associated with these interfaces include:
+
+\begin{itemize}
+    \item Worker Dashboard
+    \item Worker Task Details
+    \item Administrator Dashboard
+\end{itemize}
+
+React Router was used to navigate between these pages.
+
+The worker can open an individual task from the dashboard, while the
+administrator can access the centralized complaint overview.
+
+% =========================================================
+\section{Testing and Debugging}
+% =========================================================
+
+The implemented interfaces were tested through the React development
+server.
+
+The following operations were verified:
+
+\begin{itemize}
+    \item Opening the Field Worker Dashboard.
+    \item Opening individual worker tasks.
+    \item Accepting an assigned task.
+    \item Starting a task.
+    \item Updating work progress.
+    \item Entering work notes.
+    \item Selecting evidence files.
+    \item Completing a task after satisfying validation conditions.
+    \item Opening the Administrator Dashboard.
+    \item Displaying complaint statistics.
+    \item Displaying complaint information in the administrator view.
+    \item Navigating between the implemented frontend routes.
+\end{itemize}
+
+CSS and component-level issues encountered during development were corrected
+and the interfaces were verified in the browser.
+
+% =========================================================
+\section{Current Frontend Result}
+% =========================================================
+
+The Field Worker and Administrator frontend modules were successfully
+implemented as part of the individual contribution.
+
+The Field Worker module supports the complete prototype task progression:
+
+\begin{center}
+\textbf{Assigned}
+$\rightarrow$
+\textbf{Accepted}
+$\rightarrow$
+\textbf{In Progress}
+$\rightarrow$
+\textbf{Completed}
+\end{center}
+
+The Administrator module provides a centralized overview of complaints,
+including dynamic complaint statistics and complaint status information.
+
+These modules form the staff-side portion of the frontend prototype.
+
+% =========================================================
+\section{Current Limitations}
+% =========================================================
+
+The current frontend implementation has the following limitations:
+
+\begin{itemize}
+    \item Complaint information is maintained in frontend state and is not
+    permanently stored after a page refresh.
+    
+    \item Worker authentication is currently represented through the
+    frontend prototype.
+    
+    \item Evidence files are selected through the frontend but are not yet
+    permanently stored in a backend server.
+    
+    \item Administrator operations currently focus on viewing and monitoring
+    complaint information.
+    
+    \item Backend API and PostgreSQL database integration are not part of
+    this frontend development stage.
+\end{itemize}
+
+% =========================================================
+\section{Learning Outcomes}
+% =========================================================
+
+The development of the Field Worker and Administrator modules provided
+practical understanding of:
+
+\begin{itemize}
+    \item React component development.
+    \item React Router based navigation.
+    \item Frontend state management.
+    \item Dynamic rendering based on status values.
+    \item Interactive progress controls.
+    \item Form and input handling.
+    \item Basic frontend validation.
+    \item File selection and evidence handling.
+    \item Dashboard development.
+    \item Dynamic calculation of dashboard statistics.
+    \item CSS-based interface design.
+    \item Frontend testing and debugging.
+\end{itemize}
+
+
+% =========================================================
+\end{document}
+% =========================================================

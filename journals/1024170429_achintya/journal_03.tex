@@ -1,0 +1,493 @@
+\documentclass[12pt,a4paper]{article}
+
+% -------------------- Packages --------------------
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+
+% -------------------- Page Formatting --------------------
+\onehalfspacing
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+\titleformat{\section}
+{\large\bfseries}
+{\thesection.}
+{0.5em}
+{}
+
+\titleformat{\subsection}
+{\normalsize\bfseries}
+{\thesubsection}
+{0.5em}
+{}
+
+\setlist[itemize]{
+    leftmargin=1.5em,
+    itemsep=3pt
+}
+
+% -------------------- Header / Footer --------------------
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textbf{Journal 3}}
+\rhead{\textbf{Smart City Civic Complaint System}}
+\cfoot{\thepage}
+
+% =========================================================
+\begin{document}
+% =========================================================
+
+\begin{center}
+    {\Large \textbf{JOURNAL 3}}\\[8pt]
+    {\large \textbf{Frontend Implementation}}\\[6pt]
+    {\normalsize \textbf{Smart City Civic Complaint and Management System}}
+\end{center}
+
+\vspace{12pt}
+
+\begin{tabular}{|p{0.28\textwidth}|p{0.62\textwidth}|}
+\hline
+\textbf{Project} &
+Smart City Civic Complaint and Management System \\ \hline
+
+\textbf{Development Stage} &
+Frontend Prototype Implementation \\ \hline
+
+\textbf{Technology Used} &
+React, Vite, React Router, JavaScript, CSS \\ \hline
+
+\textbf{State Management} &
+React Context API \\ \hline
+
+
+\textbf{Student} &
+Achintya Maurya \\ \hline
+\end{tabular}
+
+% =========================================================
+\section{Objective}
+% =========================================================
+
+The objective of this development phase was to implement the frontend
+prototype of the Smart City Civic Complaint and Management System using
+React. The frontend was developed to provide an interactive interface for
+citizens and department staff and to demonstrate the main complaint
+management workflow before backend and database integration.
+
+The work focused on application setup, navigation, role-based interfaces,
+complaint submission and tracking, shared complaint state, officer
+processing, and frontend integration.
+
+% =========================================================
+\section{Development Environment and Technologies}
+% =========================================================
+
+The frontend was developed using the following technologies:
+
+\begin{itemize}
+    \item \textbf{React} -- used for developing reusable user interface
+    components.
+    
+    \item \textbf{Vite} -- used for creating and running the React
+    development project.
+    
+    \item \textbf{JavaScript} -- used for frontend application logic.
+    
+    \item \textbf{React Router} -- used for navigation between different
+    application pages.
+    
+    \item \textbf{CSS} -- used for styling dashboards, forms, cards,
+    navigation bars, buttons, and status indicators.
+    
+    \item \textbf{React Context API} -- used for maintaining shared complaint
+    information between frontend components.
+\end{itemize}
+
+% =========================================================
+\section{Frontend Project Setup}
+% =========================================================
+
+The React frontend project was created using Vite. The project structure was
+organized into separate folders for pages and application context so that the
+frontend could be developed in a modular manner.
+
+The main frontend structure includes separate page groups for:
+
+\begin{itemize}
+    \item Citizen
+    \item Department Officer
+    \item Field Worker
+    \item Administrator
+\end{itemize}
+
+The development server was configured and the application was successfully
+tested in the browser during implementation.
+
+% =========================================================
+\section{Application Routing}
+% =========================================================
+
+React Router was integrated into the application to provide navigation
+between the different frontend interfaces.
+
+The following major routes were implemented:
+
+\begin{itemize}
+    \item Login
+    \item Register
+    \item Citizen Dashboard
+    \item Submit Complaint
+    \item My Complaints
+    \item Complaint Details
+    \item Officer Dashboard
+    \item Complaint Review
+    \item Worker Dashboard
+    \item Worker Task Details
+    \item Administrator Dashboard
+\end{itemize}
+
+The routing structure allows each role to access its corresponding frontend
+interface without creating separate applications.
+
+% =========================================================
+\section{Login and Registration Interface}
+% =========================================================
+
+A login interface was developed as the entry point of the application. The
+interface contains fields for email and password along with a role-selection
+field.
+
+The available prototype roles are:
+
+\begin{itemize}
+    \item Citizen
+    \item Department Officer
+    \item Field Worker
+\end{itemize}
+
+The selected role determines which dashboard is opened after login.
+
+A registration page was also implemented and connected to the login page.
+
+At this stage, authentication is implemented only as a frontend prototype.
+Actual authentication and authorization will be handled during backend
+integration.
+
+% =========================================================
+\section{Citizen Dashboard}
+% =========================================================
+
+The Citizen Dashboard was developed as the main interface for citizens.
+It provides access to the major complaint-related operations.
+
+The dashboard contains:
+
+\begin{itemize}
+    \item Complaint statistics.
+    \item Recent complaint information.
+    \item Navigation to submit a complaint.
+    \item Navigation to view submitted complaints.
+    \item Complaint tracking access.
+    \item Logout navigation.
+\end{itemize}
+
+The dashboard was designed to provide a simple interface through which a
+citizen can submit and monitor civic complaints.
+
+% =========================================================
+\section{Complaint Submission}
+% =========================================================
+
+A dedicated \textit{Submit Complaint} page was implemented for reporting
+civic issues.
+
+The complaint form contains the following fields:
+
+\begin{itemize}
+    \item Complaint Category
+    \item Complaint Description
+    \item Location
+    \item Photograph
+\end{itemize}
+
+The available categories in the frontend prototype include:
+
+\begin{itemize}
+    \item Garbage / Waste
+    \item Street Light
+    \item Road Damage
+    \item Water Supply
+    \item Drainage
+    \item Other
+\end{itemize}
+
+The citizen enters the description of the civic issue and provides the
+location where the issue has occurred. A photograph can also be selected
+through the image upload field.
+
+After submission, a temporary complaint ID is generated and a success
+message is displayed to the citizen.
+
+% =========================================================
+\section{My Complaints}
+% =========================================================
+
+The \textit{My Complaints} page was implemented to allow citizens to view
+their submitted complaints.
+
+Each complaint card displays:
+
+\begin{itemize}
+    \item Complaint ID
+    \item Complaint title
+    \item Complaint category
+    \item Location
+    \item Submission date
+    \item Current complaint status
+\end{itemize}
+
+A \textit{View Details} option is provided for opening the detailed
+information of an individual complaint.
+
+% =========================================================
+\section{Complaint Details}
+% =========================================================
+
+The \textit{Complaint Details} page was implemented to display detailed
+information about a complaint selected by the citizen.
+
+The page contains:
+
+\begin{itemize}
+    \item Complaint title
+    \item Complaint ID
+    \item Category
+    \item Location
+    \item Submission date
+    \item Current status
+    \item Complaint description
+\end{itemize}
+
+A progress section was also included to represent the different stages of
+complaint processing.
+
+% =========================================================
+\section{Shared Complaint State}
+% =========================================================
+
+To allow different frontend roles to work with common complaint information,
+a shared state mechanism was implemented using the React Context API.
+
+A file named \texttt{ComplaintContext.jsx} was created for maintaining the
+complaint collection.
+
+The complaint object stores information such as:
+
+\begin{itemize}
+    \item Complaint ID
+    \item Title
+    \item Category
+    \item Location
+    \item Date
+    \item Citizen information
+    \item Email
+    \item Description
+    \item Status
+    \item Assigned worker
+    \item Work progress
+    \item Work notes
+    \item Evidence
+    \item Citizen verification status
+\end{itemize}
+
+Two main functions were implemented:
+
+\begin{itemize}
+    \item \texttt{addComplaint()} -- adds a new complaint to the shared
+    complaint collection.
+    
+    \item \texttt{updateComplaint()} -- updates information of an existing
+    complaint.
+\end{itemize}
+
+The \texttt{ComplaintProvider} was connected to the main React application
+so that the complaint state could be accessed by different components.
+
+% =========================================================
+\section{Officer Dashboard Integration}
+% =========================================================
+
+The Officer Dashboard was connected with the shared complaint context.
+
+Instead of using a separate static complaint list, the dashboard reads
+complaint information from the common complaint state.
+
+Dynamic statistics were implemented for:
+
+\begin{itemize}
+    \item Total Complaints
+    \item Pending Verification
+    \item In Progress
+    \item Resolved
+\end{itemize}
+
+The dashboard also displays complaint information and provides a review
+option for each complaint.
+
+% =========================================================
+\section{Complaint Review and Verification}
+% =========================================================
+
+The Complaint Review page was integrated with the shared complaint state.
+The complaint ID from the selected route is used to identify the complaint
+that needs to be reviewed.
+
+The officer can view:
+
+\begin{itemize}
+    \item Complaint title
+    \item Complaint ID
+    \item Category
+    \item Location
+    \item Submission date
+    \item Citizen name
+    \item Citizen email
+    \item Complaint description
+    \item Current status
+\end{itemize}
+
+The following officer actions were implemented:
+
+\begin{itemize}
+    \item \textbf{Verify Complaint}
+    \item \textbf{Reject Complaint}
+    \item \textbf{Assign Field Worker}
+\end{itemize}
+
+When the officer verifies a complaint, its status is updated in the shared
+frontend state. If the complaint is rejected, its status is changed to
+\textit{Rejected}.
+
+After verification, the officer can select a field worker and assign the
+complaint.
+
+% =========================================================
+\section{Worker Assignment Integration}
+% =========================================================
+
+The frontend was prepared so that a verified complaint can be assigned to a
+field worker.
+
+The officer can select a worker from the available worker list. Once the
+assignment is confirmed:
+
+\begin{itemize}
+    \item The assigned worker is stored with the complaint.
+    \item The complaint status changes to \textit{Assigned}.
+    \item The worker can access the corresponding task through the worker
+    interface.
+\end{itemize}
+
+This integration connects the officer-side processing with the field-worker
+workflow through the shared frontend complaint state.
+
+% =========================================================
+\section{Frontend Integration and Testing}
+% =========================================================
+
+The different frontend components were tested together to verify that the
+application works as a single system.
+
+The following activities were tested:
+
+\begin{itemize}
+    \item Starting the React application through the Vite development
+    server.
+    \item Navigation between different application routes.
+    \item Role-based dashboard navigation.
+    \item Citizen complaint form interaction.
+    \item Complaint listing and detail navigation.
+    \item Officer complaint review.
+    \item Complaint verification and rejection.
+    \item Field-worker assignment.
+    \item Updating complaint information through React Context.
+\end{itemize}
+
+During integration, a duplicate router configuration caused a routing error.
+This was resolved by maintaining a single \texttt{BrowserRouter} in
+\texttt{main.jsx} and keeping the application routes inside \texttt{App.jsx}.
+
+% =========================================================
+\section{Current Frontend Result}
+% =========================================================
+
+The frontend prototype has reached a functional multi-role stage. The
+Citizen, Department Officer, Field Worker, and Administrator interfaces have
+been implemented as separate frontend views.
+
+The complaint information can be shared between the implemented interfaces
+through React Context, allowing the officer-side actions to update the
+common complaint state.
+
+The frontend currently demonstrates the application workflow without
+requiring a backend server or database.
+
+% =========================================================
+\section{Current Limitations}
+% =========================================================
+
+The current frontend implementation has the following limitations:
+
+\begin{itemize}
+    \item Complaint information is currently maintained in React Context and
+    is reset when the application is refreshed.
+    
+    \item Login is currently a frontend prototype and does not perform real
+    authentication.
+    
+    \item Photograph and evidence inputs are currently handled at the
+    frontend level.
+    
+    \item Persistent storage has not yet been implemented.
+    
+    \item Backend API integration is not part of the current frontend stage.
+\end{itemize}
+
+% =========================================================
+\section{Learning Outcomes}
+% =========================================================
+
+The frontend implementation provided practical understanding of:
+
+\begin{itemize}
+    \item React component-based development.
+    \item React Router and multi-page navigation.
+    \item Role-based frontend organization.
+    \item Interactive form handling in React.
+    \item Shared state management using React Context API.
+    \item Dynamic rendering based on complaint status.
+    \item Frontend integration and debugging.
+    \item Building an interactive prototype before backend integration.
+\end{itemize}
+
+% =========================================================
+\section{Conclusion}
+% =========================================================
+
+The frontend implementation successfully established the user-facing
+structure of the Smart City Civic Complaint and Management System. The major
+citizen and officer interfaces, complaint handling functions, routing, and
+shared complaint state were implemented and tested.
+
+The completed frontend provides the foundation for further integration with
+the remaining application modules and, subsequently, the backend API and
+database.
+
+% =========================================================
+\end{document}
+% =========================================================
