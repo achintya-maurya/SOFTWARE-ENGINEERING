@@ -68,9 +68,6 @@ Tracking and Resolution\par}
 1024170429 Achintya Maurya\par
 1024170437 Hittin Gupta\par
 
-
-
-
 \vspace{0.3in}
 
 \textbf{Group: 3Q41 BE Third Year, CSE}\par
@@ -96,6 +93,22 @@ Thapar Institute of Engineering and Technology, Patiala\par
 September 2026
 
 \end{titlepage}
+
+
+% =================================================
+% TABLE OF CONTENTS
+% =================================================
+
+\tableofcontents
+\newpage
+
+
+% % =================================================
+% % LIST OF FIGURES
+% % =================================================
+
+% \listoffigures
+% \newpage
 
 
 % =================================================
@@ -257,8 +270,6 @@ The proposed smart assistance layer contains planned features such as smart clas
 % USE CASE DIAGRAM
 % ------------------------------------------------
 
-
-
 \subsubsection*{Use Case Diagram}
 
 The Use Case Diagram represents the major actors of the system and the
@@ -283,7 +294,6 @@ The diagram also represents the planned smart assistance features including Smar
 % ------------------------------------------------
 
 \subsubsection*{Activity Diagram}
-
 
 The Activity Diagram represents the complete workflow of the Smart City Civic Complaint and Management System. It shows the sequence of activities starting from citizen login and complaint submission to complaint verification, worker assignment, work completion, and final citizen verification.
 
@@ -310,6 +320,7 @@ The Sequence Diagram illustrates the chronological interaction between the Citiz
     \label{fig:sequence}
 \end{figure}
 
+
 % ------------------------------------------------
 % SWIMLANE DIAGRAM
 % ------------------------------------------------
@@ -327,6 +338,8 @@ the distribution of responsibilities clear.
     \caption{Swimlane Diagram of the Smart City Civic Complaint and Management System}
     \label{fig:swimlane}
 \end{figure}
+
+
 % ------------------------------------------------
 % COLLABORATION DIAGRAM
 % ------------------------------------------------
@@ -413,7 +426,11 @@ The major stages of the implementation are:
 This modular approach allows individual parts of the system to be developed and tested independently while maintaining the overall complaint workflow.
 
 
-\subsubsection*{2.2.1 Module 1: Core Functionality}
+% =================================================
+% 2.2.1 MODULE 1
+% =================================================
+
+\subsection{Module 1: Core Functionality}
 
 The Core Functionality module provides the main complaint management features
 of the Smart City Civic Complaint and Management System. The module supports
@@ -583,6 +600,11 @@ review and manage complaints, a Field Worker can handle assigned tasks and
 update their progress, and an Administrator can monitor complaints across
 the system.
 
+
+% ------------------------------------------------
+% CORE COMPLAINT STATUS FLOW
+% ------------------------------------------------
+
 \subsubsection*{Core Complaint Status Flow}
 
 The core module maintains a logical sequence of complaint states:
@@ -607,6 +629,10 @@ If the complaint is rejected during verification, it follows the rejection path.
 
 The status-based approach provides a traceable representation of the complaint lifecycle and allows the different system actors to understand the current state of a complaint.
 
+
+% ------------------------------------------------
+% FRONTEND IMPLEMENTATION
+% ------------------------------------------------
 
 \subsubsection*{Frontend Implementation}
 

@@ -1,0 +1,18 @@
+\contentsline {chapter}{\numberline {1}Introduction}{2}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Background and Context}{2}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}Problem Statement}{3}{subsection.1.1.1}%
+\contentsline {section}{\numberline {1.2}Project Objectives}{3}{section.1.2}%
+\contentsline {chapter}{\numberline {2}Methodology and Design}{5}{chapter.2}%
+\contentsline {section}{\numberline {2.1}System Architecture}{5}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}High-Level Design}{6}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Technical Stack}{12}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}Implementation Details}{12}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Module 1: Core Functionality}{13}{subsection.2.2.1}%
+\contentsline {paragraph}{User Authentication}{13}{section*.12}%
+\contentsline {paragraph}{Citizen Dashboard}{14}{section*.14}%
+\contentsline {paragraph}{Complaint Tracking}{14}{section*.16}%
+\contentsline {paragraph}{Department Officer Dashboard}{15}{section*.19}%
+\contentsline {paragraph}{Complaint Review}{16}{section*.21}%
+\contentsline {paragraph}{Field Worker Dashboard}{17}{section*.23}%
+\contentsline {paragraph}{Task Management}{17}{section*.25}%
+\contentsline {paragraph}{Administrator Dashboard}{18}{section*.27}%
