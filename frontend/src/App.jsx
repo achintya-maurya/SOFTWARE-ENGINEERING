@@ -1,5 +1,8 @@
-import { Routes, Route, Link } from "react-router-dom";
 import { useState } from "react";
+import { Routes, Route, Link, useNavigate, Navigate } from "react-router-dom";
+
+import { useAuth } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 import Register from "./pages/Register";
 
@@ -14,133 +17,257 @@ import ComplaintReview from "./pages/officer/ComplaintReview";
 import WorkerDashboard from "./pages/worker/WorkerDashboard";
 import WorkerTaskDetails from "./pages/worker/WorkerTaskDetails";
 
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import AdminComplaintDetails from "./pages/admin/AdminComplaintDetails";
-
 import "./App.css";
+import "./styles/design-system.css";
+import "./styles/auth-pages.css";
+
+// ================= LOGIN COMPONENT =================
 
 function Login() {
   const [role, setRole] = useState("citizen");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const { login, loading, isAuthenticated, user } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirect already authenticated users.
+  const dashboardRoutes = {
+    citizen: "/citizen/dashboard",
+    officer: "/officer/dashboard",
+    worker: "/worker/dashboard",
+  };
+
+  if (isAuthenticated && user) {
+    return <Navigate to={dashboardRoutes[user.role] || "/"} replace />;
+  }
+
+  // Handle login using the existing AuthContext.
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      const authenticatedUser = await login(email.trim(), password, role);
+
+      const destination = dashboardRoutes[authenticatedUser.role];
+
+      if (!destination) {
+        setError("Invalid user role.");
+        return;
+      }
+
+      navigate(destination, { replace: true });
+    } catch (err) {
+      setError(err.message || "Login failed. Please check your credentials.");
+    }
+  };
 
   return (
-    <div className="app">
-      <div className="login-container">
-        {/* Left Side */}
-        <div className="login-info">
-          <h1>Smart City</h1>
+    <div className="auth-page">
+      <div className="auth-container">
+        {/* Branding Panel */}
+        <section className="auth-brand-panel">
+          <div className="auth-brand">
+            <div className="auth-brand-logo">SC</div>
+            <span>Smart City</span>
+          </div>
 
-          <h2>Civic Complaint & Management System</h2>
+          <div className="auth-brand-content">
+            <span className="auth-eyebrow">CIVIC COMPLAINT MANAGEMENT</span>
 
-          <p>
-            Report civic issues, track complaints, and help make your city
-            better.
-          </p>
-        </div>
+            <h1>Making your city better starts here.</h1>
 
-        {/* Right Side */}
-        <div className="login-box">
-          <h2>Welcome Back</h2>
+            <p>
+              Report civic issues, track complaint progress, and stay connected
+              with the people working to improve your city.
+            </p>
+          </div>
 
-          <p className="login-subtitle">Login to your account</p>
+          <div className="auth-brand-footer">
+            Smart City Civic Complaint & Management System
+          </div>
+        </section>
 
-          <form>
-            {/* Email */}
-            <label htmlFor="email">Email</label>
-
-            <input type="email" id="email" placeholder="Enter your email" />
-
-            {/* Password */}
-            <label htmlFor="password">Password</label>
-
-            <input
-              type="password"
-              id="password"
-              placeholder="Enter your password"
-            />
-
-            {/* Role Selection */}
-            <div className="role-selection">
-              <label htmlFor="role">Login As</label>
-
-              <select
-                id="role"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-              >
-                <option value="citizen">Citizen</option>
-
-                <option value="officer">Officer</option>
-
-                <option value="worker">Field Worker</option>
-
-                <option value="admin">Administrator</option>
-              </select>
+        {/* Login Form */}
+        <section className="auth-form-panel">
+          <div className="auth-form-content">
+            <div className="auth-mobile-brand">
+              <div className="auth-brand-logo">SC</div>
+              <span>Smart City</span>
             </div>
 
-            {/* Login Button */}
-            <Link
-              to={
-                role === "citizen"
-                  ? "/citizen/dashboard"
-                  : role === "officer"
-                    ? "/officer/dashboard"
-                    : role === "worker"
-                      ? "/worker/dashboard"
-                      : "/admin/dashboard"
-              }
-              className="login-button"
-            >
-              Login
-            </Link>
-          </form>
+            <span className="auth-form-eyebrow">WELCOME BACK</span>
 
-          {/* Register */}
-          <p className="register-text">
-            Don't have an account? <Link to="/register">Register</Link>
-          </p>
-        </div>
+            <h2>Login to your account</h2>
+
+            <p className="auth-subtitle">
+              Enter your credentials to access your Smart City portal.
+            </p>
+
+            <form onSubmit={handleLogin} className="auth-form">
+              {/* Email */}
+              <div className="auth-field">
+                <label htmlFor="email">Email Address</label>
+
+                <input
+                  type="email"
+                  id="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="username"
+                  required
+                />
+              </div>
+
+              {/* Password */}
+              <div className="auth-field">
+                <label htmlFor="password">Password</label>
+
+                <input
+                  type="password"
+                  id="password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="current-password"
+                  required
+                />
+              </div>
+
+              {/* Role Selection */}
+              <div className="auth-field">
+                <label htmlFor="role">Login As</label>
+
+                <select
+                  id="role"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  required
+                >
+                  <option value="citizen">Citizen</option>
+                  <option value="officer">Officer</option>
+                  <option value="worker">Field Worker</option>
+                </select>
+              </div>
+
+              {/* Error */}
+              {error && (
+                <p className="auth-error" role="alert">
+                  {error}
+                </p>
+              )}
+
+              {/* Login Button */}
+              <button
+                type="submit"
+                className="auth-submit-button"
+                disabled={loading}
+              >
+                {loading ? "Logging in..." : "Login"}
+              </button>
+            </form>
+
+            <p className="auth-switch-text">
+              Don't have an account? <Link to="/register">Register</Link>
+            </p>
+          </div>
+        </section>
       </div>
     </div>
   );
 }
 
+// ================= APP COMPONENT =================
+
 function App() {
   return (
     <Routes>
-      {/* ================= LOGIN ================= */}
-
+      {/* LOGIN */}
       <Route path="/" element={<Login />} />
 
-      {/* ================= REGISTER ================= */}
-
+      {/* REGISTER */}
       <Route path="/register" element={<Register />} />
 
-      {/* ================= CITIZEN ================= */}
+      {/* CITIZEN ROUTES */}
+      <Route
+        path="/citizen/dashboard"
+        element={
+          <ProtectedRoute allowedRole="citizen">
+            <CitizenDashboard />
+          </ProtectedRoute>
+        }
+      />
 
-      <Route path="/citizen/dashboard" element={<CitizenDashboard />} />
+      <Route
+        path="/citizen/submit"
+        element={
+          <ProtectedRoute allowedRole="citizen">
+            <SubmitComplaint />
+          </ProtectedRoute>
+        }
+      />
 
-      <Route path="/citizen/submit" element={<SubmitComplaint />} />
+      <Route
+        path="/citizen/complaints"
+        element={
+          <ProtectedRoute allowedRole="citizen">
+            <MyComplaints />
+          </ProtectedRoute>
+        }
+      />
 
-      <Route path="/citizen/complaints" element={<MyComplaints />} />
+      <Route
+        path="/citizen/complaint/:id"
+        element={
+          <ProtectedRoute allowedRole="citizen">
+            <ComplaintDetails />
+          </ProtectedRoute>
+        }
+      />
 
-      <Route path="/citizen/complaint/:id" element={<ComplaintDetails />} />
+      {/* OFFICER ROUTES */}
+      <Route
+        path="/officer/dashboard"
+        element={
+          <ProtectedRoute allowedRole="officer">
+            <OfficerDashboard />
+          </ProtectedRoute>
+        }
+      />
 
-      {/* ================= OFFICER ================= */}
+      <Route
+        path="/officer/complaint/:id"
+        element={
+          <ProtectedRoute allowedRole="officer">
+            <ComplaintReview />
+          </ProtectedRoute>
+        }
+      />
 
-      <Route path="/officer/dashboard" element={<OfficerDashboard />} />
+      {/* WORKER ROUTES */}
+      <Route
+        path="/worker/dashboard"
+        element={
+          <ProtectedRoute allowedRole="worker">
+            <WorkerDashboard />
+          </ProtectedRoute>
+        }
+      />
 
-      <Route path="/officer/complaint/:id" element={<ComplaintReview />} />
+      <Route
+        path="/worker/task/:id"
+        element={
+          <ProtectedRoute allowedRole="worker">
+            <WorkerTaskDetails />
+          </ProtectedRoute>
+        }
+      />
 
-      {/* ================= FIELD WORKER ================= */}
-
-      <Route path="/worker/dashboard" element={<WorkerDashboard />} />
-
-      <Route path="/worker/task/:id" element={<WorkerTaskDetails />} />
-
-      {/* ================= ADMIN ================= */}
-
-      <Route path="/admin/dashboard" element={<AdminDashboard />} />
-      <Route path="/admin/complaint/:id" element={<AdminComplaintDetails />} />
+      {/* UNKNOWN ROUTES */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

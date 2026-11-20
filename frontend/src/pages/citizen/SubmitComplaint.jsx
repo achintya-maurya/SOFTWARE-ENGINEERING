@@ -1,106 +1,240 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
 import "../../App.css";
+
 import { useComplaints } from "../../context/ComplaintContext";
+import { useAuth } from "../../context/AuthContext";
+import { apiRequest, API_BASE_URL } from "../../api/api";
+
+// Category and department IDs from PostgreSQL
+const CATEGORY_MAPPING = {
+  "Road Damage": {
+    category_id: 1,
+    department_id: 1,
+  },
+  Streetlight: {
+    category_id: 2,
+    department_id: 2,
+  },
+  Garbage: {
+    category_id: 3,
+    department_id: 3,
+  },
+  "Water Supply": {
+    category_id: 4,
+    department_id: 4,
+  },
+  Drainage: {
+    category_id: 5,
+    department_id: 5,
+  },
+};
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_FILES = 3;
+
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 function SubmitComplaint() {
-  const { addComplaint, complaints } = useComplaints();
+  const { refreshComplaints } = useComplaints();
+  const { token, user } = useAuth();
 
-  // Stores the information entered by the citizen
   const [formData, setFormData] = useState({
     category: "",
     description: "",
     location: "",
-    photograph: null,
   });
 
-  // Stores the generated complaint ID after submission
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [previews, setPreviews] = useState([]);
+
   const [complaintId, setComplaintId] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // Handles changes in the form
+  // Create and clean up image previews.
+  useEffect(() => {
+    const previewUrls = selectedFiles.map((file) => URL.createObjectURL(file));
+
+    setPreviews(previewUrls);
+
+    return () => {
+      previewUrls.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [selectedFiles]);
+
+  // Handle normal form input changes.
   const handleChange = (event) => {
-    const { name, value, files } = event.target;
+    const { name, value } = event.target;
 
-    setFormData({
-      ...formData,
-      [name]: files ? files[0] : value,
-    });
+    setFormData((previousData) => ({
+      ...previousData,
+      [name]: value,
+    }));
   };
 
-  // Handles form submission
-  const handleSubmit = (event) => {
+  // Validate and select photographs.
+  const handleFileChange = (event) => {
+    setError("");
+    setSuccess("");
+
+    const files = Array.from(event.target.files || []);
+
+    if (files.length > MAX_FILES) {
+      setError(`You can upload a maximum of ${MAX_FILES} photographs.`);
+      event.target.value = "";
+      return;
+    }
+
+    for (const file of files) {
+      if (!ALLOWED_TYPES.includes(file.type)) {
+        setError("Only JPG, PNG and WEBP photographs are allowed.");
+        event.target.value = "";
+        return;
+      }
+
+      if (file.size > MAX_FILE_SIZE) {
+        setError(`"${file.name}" exceeds the 5 MB size limit.`);
+        event.target.value = "";
+        return;
+      }
+
+      if (file.size === 0) {
+        setError(`"${file.name}" is empty.`);
+        event.target.value = "";
+        return;
+      }
+    }
+
+    setSelectedFiles(files);
+  };
+
+  // Remove a selected photograph.
+  const removeFile = (index) => {
+    setSelectedFiles((previousFiles) =>
+      previousFiles.filter((_, fileIndex) => fileIndex !== index),
+    );
+  };
+
+  // Upload photographs after the complaint is created.
+  const uploadPhotographs = async (newComplaintId) => {
+    for (const file of selectedFiles) {
+      const uploadData = new FormData();
+      uploadData.append("file", file);
+
+      const response = await fetch(
+        `${API_BASE_URL}/api/complaints/${newComplaintId}/evidence`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: uploadData,
+        },
+      );
+
+      const responseData = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(
+          responseData.detail || `Failed to upload ${file.name}.`,
+        );
+      }
+    }
+  };
+
+  // Submit complaint and then upload its photographs.
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    /*
-      Generate a complaint ID.
+    setError("");
+    setSuccess("");
+    setComplaintId("");
 
-      We use the current number of complaints so that
-      newly submitted complaints continue after the
-      existing prototype complaints.
-    */
-    const newComplaintNumber = 1001 + complaints.length;
+    const mapping = CATEGORY_MAPPING[formData.category];
 
-    const newComplaintId = `CMP${newComplaintNumber}`;
+    if (!mapping) {
+      setError("Please select a valid complaint category.");
+      return;
+    }
 
-    // Create the new complaint object
-    const newComplaint = {
-      id: newComplaintId,
+    if (!token || user?.role !== "citizen") {
+      setError("Please log in as a citizen before submitting.");
+      return;
+    }
 
-      // Create a title from the selected category
-      title:
-        formData.category === "Other"
-          ? "Other Civic Issue"
-          : `${formData.category} Issue`,
+    setLoading(true);
 
-      category:
-        formData.category === "Garbage" ? "Garbage / Waste" : formData.category,
+    let complaintCreated = false;
 
-      description: formData.description,
+    try {
+      const payload = {
+        category_id: mapping.category_id,
+        department_id: mapping.department_id,
 
-      location: formData.location,
+        title:
+          formData.category === "Streetlight"
+            ? "Streetlight not working"
+            : `${formData.category} issue`,
 
-      date: new Date().toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      }),
+        description: formData.description.trim(),
+        location: formData.location.trim(),
+      };
 
-      // Every newly submitted complaint starts as Pending
-      status: "Pending",
+      // Step 1: Create complaint.
+      const response = await apiRequest(
+        "/api/complaints",
+        {
+          method: "POST",
+          body: JSON.stringify(payload),
+        },
+        token,
+      );
 
-      // Worker-related information
-      assignedWorker: null,
-      progress: 0,
-      workNotes: "",
-      evidence: null,
+      const newComplaintId = response.complaint.complaint_id;
 
-      // Citizen verification
-      citizenVerified: false,
+      complaintCreated = true;
 
-      // Photograph submitted by citizen
-      photograph: formData.photograph ? formData.photograph.name : null,
+      setComplaintId(`CMP${String(newComplaintId).padStart(4, "0")}`);
 
-      // Temporary citizen information
-      citizen: "Current Citizen",
-      email: "citizen@example.com",
-    };
+      // Step 2: Upload selected photographs.
+      if (selectedFiles.length > 0) {
+        await uploadPhotographs(newComplaintId);
 
-    // Add complaint to shared ComplaintContext
-    addComplaint(newComplaint);
+        setSuccess(
+          "Your complaint and all photographs were submitted successfully.",
+        );
+      } else {
+        setSuccess("Your complaint was submitted successfully.");
+      }
 
-    // Display the generated complaint ID
-    setComplaintId(newComplaintId);
+      // Clear form after successful complaint creation.
+      setFormData({
+        category: "",
+        description: "",
+        location: "",
+      });
 
-    // Clear the form after successful submission
-    setFormData({
-      category: "",
-      description: "",
-      location: "",
-      photograph: null,
-    });
+      setSelectedFiles([]);
 
-    // Reset the file input
-    document.getElementById("photograph").value = "";
+      // Refresh actual complaints from PostgreSQL.
+      await refreshComplaints();
+    } catch (err) {
+      if (complaintCreated) {
+        setSuccess(
+          "Your complaint was created, but photograph upload failed. " +
+            "Please contact support or try uploading the photographs again.",
+        );
+      } else {
+        setError(
+          err.message || "Unable to submit complaint. Please try again.",
+        );
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -109,12 +243,11 @@ function SubmitComplaint() {
       <nav className="navbar">
         <div className="navbar-brand">Smart City</div>
 
-        <div className="navbar-user">Welcome, Citizen</div>
+        <div className="navbar-user">Welcome, {user?.name || "Citizen"}</div>
       </nav>
 
       {/* Main Content */}
       <main className="form-page">
-        {/* Back button */}
         <Link to="/citizen/dashboard" className="back-link">
           ← Back to Dashboard
         </Link>
@@ -126,7 +259,6 @@ function SubmitComplaint() {
             Report a civic issue by providing the details below.
           </p>
 
-          {/* Complaint Form */}
           <form onSubmit={handleSubmit}>
             {/* Category */}
             <div className="form-group">
@@ -138,20 +270,14 @@ function SubmitComplaint() {
                 value={formData.category}
                 onChange={handleChange}
                 required
+                disabled={loading}
               >
                 <option value="">Select a category</option>
-
-                <option value="Garbage">Garbage / Waste</option>
-
-                <option value="Street Light">Street Light</option>
-
                 <option value="Road Damage">Road Damage</option>
-
+                <option value="Streetlight">Streetlight</option>
+                <option value="Garbage">Garbage</option>
                 <option value="Water Supply">Water Supply</option>
-
                 <option value="Drainage">Drainage</option>
-
-                <option value="Other">Other</option>
               </select>
             </div>
 
@@ -166,7 +292,9 @@ function SubmitComplaint() {
                 value={formData.description}
                 onChange={handleChange}
                 rows="5"
+                maxLength={2000}
                 required
+                disabled={loading}
               />
             </div>
 
@@ -182,43 +310,109 @@ function SubmitComplaint() {
                 value={formData.location}
                 onChange={handleChange}
                 required
+                disabled={loading}
               />
             </div>
 
-            {/* Photograph */}
+            {/* Photograph Upload */}
             <div className="form-group">
-              <label htmlFor="photograph">Upload Photograph</label>
+              <label htmlFor="photographs">Photograph Upload</label>
 
               <input
                 type="file"
-                id="photograph"
-                name="photograph"
-                accept="image/*"
-                onChange={handleChange}
+                id="photographs"
+                accept="image/jpeg,image/png,image/webp"
+                multiple
+                onChange={handleFileChange}
+                disabled={loading}
               />
 
-              <small>Upload an image showing the civic issue.</small>
+              <small>
+                Upload up to 3 photographs. JPG, PNG or WEBP. Maximum 5 MB per
+                photograph.
+              </small>
+
+              {/* Image Previews */}
+              {previews.length > 0 && (
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: "12px",
+                    marginTop: "15px",
+                  }}
+                >
+                  {previews.map((preview, index) => (
+                    <div
+                      key={`${preview}-${index}`}
+                      style={{
+                        width: "120px",
+                        position: "relative",
+                      }}
+                    >
+                      <img
+                        src={preview}
+                        alt={`Selected photograph ${index + 1}`}
+                        style={{
+                          width: "120px",
+                          height: "100px",
+                          objectFit: "cover",
+                          borderRadius: "8px",
+                          border: "1px solid #cbd5e1",
+                        }}
+                      />
+
+                      <button
+                        type="button"
+                        onClick={() => removeFile(index)}
+                        disabled={loading}
+                        aria-label={`Remove photograph ${index + 1}`}
+                        style={{
+                          display: "block",
+                          width: "100%",
+                          marginTop: "5px",
+                          padding: "5px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Remove
+                      </button>
+
+                      <small>{selectedFiles[index]?.name}</small>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
+            {/* Error Message */}
+            {error && (
+              <p className="error-message" role="alert">
+                {error}
+              </p>
+            )}
+
             {/* Submit Button */}
-            <button type="submit" className="submit-button">
-              Submit Complaint
+            <button type="submit" className="submit-button" disabled={loading}>
+              {loading
+                ? "Submitting complaint and photographs..."
+                : "Submit Complaint"}
             </button>
           </form>
 
           {/* Success Message */}
           {complaintId && (
-            <div className="success-message">
+            <div className="success-message" role="status">
               <h2>Complaint Submitted Successfully</h2>
 
-              <p>Your complaint has been registered.</p>
+              <p>{success}</p>
 
               <p>
                 <strong>Complaint ID:</strong> {complaintId}
               </p>
 
               <p>
-                <strong>Status:</strong> Pending
+                <strong>Status:</strong> Pending Verification
               </p>
 
               <Link to="/citizen/dashboard" className="dashboard-button">

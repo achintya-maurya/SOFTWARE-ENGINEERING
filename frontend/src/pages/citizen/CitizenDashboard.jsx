@@ -1,26 +1,67 @@
 import { Link } from "react-router-dom";
+
+import { useComplaints } from "../../context/ComplaintContext";
+import DashboardLayout from "../../components/layout/DashboardLayout";
+
 import "../../App.css";
 
 function CitizenDashboard() {
+  const { complaints, loading, error, refreshComplaints } = useComplaints();
+
+  // Calculate complaint statistics from actual backend data.
+  const totalComplaints = complaints.length;
+
+  const pendingComplaints = complaints.filter((complaint) =>
+    ["Pending Verification", "Verified", "Assigned"].includes(complaint.status),
+  ).length;
+
+  const inProgressComplaints = complaints.filter((complaint) =>
+    ["Accepted", "In Progress", "Completed"].includes(complaint.status),
+  ).length;
+
+  const resolvedComplaints = complaints.filter(
+    (complaint) => complaint.status === "Resolved",
+  ).length;
+
+  const rejectedComplaints = complaints.filter(
+    (complaint) => complaint.status === "Rejected",
+  ).length;
+
+  // Display the latest three complaints.
+  const recentComplaints = complaints.slice(0, 3);
+
+  // Convert backend status into CSS status classes.
+  const getStatusClass = (status) => {
+    switch (status) {
+      case "Pending Verification":
+      case "Verified":
+      case "Assigned":
+      case "Reopened":
+        return "pending";
+
+      case "Accepted":
+      case "In Progress":
+      case "Completed":
+        return "progress";
+
+      case "Resolved":
+        return "resolved";
+
+      case "Rejected":
+        return "rejected";
+
+      default:
+        return "pending";
+    }
+  };
+
   return (
-    <div className="dashboard">
-      {/* Navigation Bar */}
-      <nav className="citizen-navbar">
-        <h2>Smart City</h2>
-
-        <div className="citizen-nav-right">
-          <span>Citizen</span>
-
-          <Link to="/">Logout</Link>
-        </div>
-      </nav>
-
-      {/* Main Content */}
-      <main className="dashboard-content">
+    <DashboardLayout>
+      <main className="dashboard-content citizen-dashboard-content">
+        {/* Page Header */}
         <div className="dashboard-header">
           <div>
             <h1>Citizen Dashboard</h1>
-
             <p>Report and track civic complaints in your city.</p>
           </div>
 
@@ -30,25 +71,30 @@ function CitizenDashboard() {
         </div>
 
         {/* Statistics */}
-        <div className="stats-grid">
+        <div className="stats-grid citizen-stats-grid">
           <div className="stat-card">
             <h3>Total Complaints</h3>
-            <p>3</p>
+            <p>{totalComplaints}</p>
           </div>
 
           <div className="stat-card">
             <h3>Pending</h3>
-            <p>1</p>
+            <p>{pendingComplaints}</p>
           </div>
 
           <div className="stat-card">
             <h3>In Progress</h3>
-            <p>1</p>
+            <p>{inProgressComplaints}</p>
           </div>
 
           <div className="stat-card">
             <h3>Resolved</h3>
-            <p>1</p>
+            <p>{resolvedComplaints}</p>
+          </div>
+
+          <div className="stat-card rejected-stat">
+            <h3>Rejected</h3>
+            <p>{rejectedComplaints}</p>
           </div>
         </div>
 
@@ -56,53 +102,59 @@ function CitizenDashboard() {
         <section className="complaints-section">
           <div className="section-header">
             <h2>Recent Complaints</h2>
-
             <Link to="/citizen/complaints">View All</Link>
           </div>
 
-          <div className="complaint-list">
-            {/* Complaint 1 */}
-            <div className="complaint-card">
-              <div>
-                <h3>Garbage Collection Issue</h3>
+          {/* Loading */}
+          {loading && <p>Loading complaints...</p>}
 
-                <p>Complaint ID: CMP1001</p>
+          {/* Error */}
+          {!loading && error && (
+            <div>
+              <p className="error-message">{error}</p>
 
-                <p>Location: Sector 15</p>
-              </div>
-
-              <span className="status pending">Pending</span>
+              <button type="button" onClick={refreshComplaints}>
+                Retry
+              </button>
             </div>
+          )}
 
-            {/* Complaint 2 */}
-            <div className="complaint-card">
-              <div>
-                <h3>Street Light Not Working</h3>
+          {/* Complaint List */}
+          {!loading && !error && (
+            <div className="complaint-list">
+              {recentComplaints.length > 0 ? (
+                recentComplaints.map((complaint) => (
+                  <Link
+                    to={`/citizen/complaint/${complaint.id}`}
+                    className="complaint-card"
+                    key={complaint.id}
+                  >
+                    <div className="citizen-complaint-info">
+                      <h3>{complaint.title}</h3>
 
-                <p>Complaint ID: CMP1002</p>
+                      <p>
+                        Complaint ID: CMP
+                        {String(complaint.id).padStart(4, "0")}
+                      </p>
 
-                <p>Location: Sector 21</p>
-              </div>
+                      <p>Location: {complaint.location}</p>
+                    </div>
 
-              <span className="status progress">In Progress</span>
+                    <span
+                      className={`status ${getStatusClass(complaint.status)}`}
+                    >
+                      {complaint.status}
+                    </span>
+                  </Link>
+                ))
+              ) : (
+                <p>No complaints submitted yet.</p>
+              )}
             </div>
-
-            {/* Complaint 3 */}
-            <div className="complaint-card">
-              <div>
-                <h3>Road Damage</h3>
-
-                <p>Complaint ID: CMP1003</p>
-
-                <p>Location: Sector 10</p>
-              </div>
-
-              <span className="status resolved">Resolved</span>
-            </div>
-          </div>
+          )}
         </section>
       </main>
-    </div>
+    </DashboardLayout>
   );
 }
 

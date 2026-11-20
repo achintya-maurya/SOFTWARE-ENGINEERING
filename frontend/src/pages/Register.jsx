@@ -1,59 +1,181 @@
-import "../App.css";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
+import { useAuth } from "../context/AuthContext";
+import "../styles/auth-pages.css";
 
 function Register() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const { register, loading } = useAuth();
+  const navigate = useNavigate();
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    setError("");
+    setSuccess("");
+
+    if (password.length < 8) {
+      setError("Password must contain at least 8 characters.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    try {
+      await register(name.trim(), email.trim(), password);
+
+      setSuccess("Account created successfully! Redirecting to login...");
+
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
+    } catch (err) {
+      setError(err.message || "Registration failed. Please try again.");
+    }
+  };
+
   return (
-    <div className="app">
-      <div className="login-container">
-        {/* Left side */}
-        <div className="login-info">
-          <h1>Smart City</h1>
+    <div className="auth-page">
+      <div className="auth-container">
+        {/* Branding Panel */}
+        <section className="auth-brand-panel">
+          <div className="auth-brand">
+            <div className="auth-brand-logo">SC</div>
+            <span>Smart City</span>
+          </div>
 
-          <h2>Civic Complaint & Management System</h2>
+          <div className="auth-brand-content">
+            <span className="auth-eyebrow">CIVIC COMPLAINT MANAGEMENT</span>
 
-          <p>
-            Create your account and help make your city cleaner, safer, and
-            better.
-          </p>
-        </div>
+            <h1>Build a better city, together.</h1>
 
-        {/* Right side */}
-        <div className="login-box">
-          <h2>Create Account</h2>
+            <p>
+              Report civic issues, track their progress, and contribute to a
+              cleaner, safer, and smarter community.
+            </p>
+          </div>
 
-          <p className="login-subtitle">Register as a citizen</p>
+          <div className="auth-brand-footer">
+            Smart City Civic Complaint & Management System
+          </div>
+        </section>
 
-          <form>
-            <label htmlFor="name">Full Name</label>
+        {/* Registration Form */}
+        <section className="auth-form-panel">
+          <div className="auth-form-content">
+            <div className="auth-mobile-brand">
+              <div className="auth-brand-logo">SC</div>
+              <span>Smart City</span>
+            </div>
 
-            <input type="text" id="name" placeholder="Enter your full name" />
+            <span className="auth-form-eyebrow">GET STARTED</span>
 
-            <label htmlFor="email">Email</label>
+            <h2>Create your account</h2>
 
-            <input type="email" id="email" placeholder="Enter your email" />
+            <p className="auth-subtitle">
+              Register as a citizen to report and track civic complaints.
+            </p>
 
-            <label htmlFor="password">Password</label>
+            <form onSubmit={handleRegister} className="auth-form">
+              <div className="auth-field">
+                <label htmlFor="name">Full Name</label>
 
-            <input
-              type="password"
-              id="password"
-              placeholder="Create a password"
-            />
+                <input
+                  type="text"
+                  id="name"
+                  placeholder="Enter your full name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  minLength={2}
+                  maxLength={100}
+                  autoComplete="name"
+                  required
+                />
+              </div>
 
-            <label htmlFor="confirmPassword">Confirm Password</label>
+              <div className="auth-field">
+                <label htmlFor="email">Email Address</label>
 
-            <input
-              type="password"
-              id="confirmPassword"
-              placeholder="Confirm your password"
-            />
+                <input
+                  type="email"
+                  id="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
+                  required
+                />
+              </div>
 
-            <button type="submit">Create Account</button>
-          </form>
+              <div className="auth-field">
+                <label htmlFor="password">Password</label>
 
-          <p className="register-text">
-            Already have an account? <span>Login</span>
-          </p>
-        </div>
+                <input
+                  type="password"
+                  id="password"
+                  placeholder="Create a password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  minLength={8}
+                  maxLength={128}
+                  autoComplete="new-password"
+                  required
+                />
+
+                <small>Use at least 8 characters.</small>
+              </div>
+
+              <div className="auth-field">
+                <label htmlFor="confirmPassword">Confirm Password</label>
+
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  placeholder="Re-enter your password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  autoComplete="new-password"
+                  required
+                />
+              </div>
+
+              {error && (
+                <p className="auth-error" role="alert">
+                  {error}
+                </p>
+              )}
+
+              {success && (
+                <p className="auth-success" role="status">
+                  {success}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                className="auth-submit-button"
+                disabled={loading}
+              >
+                {loading ? "Creating Account..." : "Create Account"}
+              </button>
+            </form>
+
+            <p className="auth-switch-text">
+              Already have an account? <Link to="/">Login</Link>
+            </p>
+          </div>
+        </section>
       </div>
     </div>
   );

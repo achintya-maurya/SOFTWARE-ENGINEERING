@@ -2641,3 +2641,50 @@ role based login
     width: 100%;
   }
 }
+
+/* =========================================
+   OFFICER COMPLAINT PHOTO GALLERY
+========================================= */
+
+.officer-evidence-card {
+  margin-top: 24px;
+}
+
+.officer-photo-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.officer-photo-item {
+  display: block;
+  height: 180px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+}
+
+.officer-photo-item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.25s ease;
+}
+
+.officer-photo-item:hover img {
+  transform: scale(1.05);
+}
+
+@media (max-width: 600px) {
+  .officer-photo-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .officer-photo-item {
+    height: 145px;
+  }
+}

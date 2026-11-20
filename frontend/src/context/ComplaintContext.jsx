@@ -1,118 +1,129 @@
-import { createContext, useContext, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
+
+import { apiRequest } from "../api/api";
+import { useAuth } from "./AuthContext";
 
 // Create Complaint Context
-const ComplaintContext = createContext();
+const ComplaintContext = createContext(null);
 
-// Initial complaint data
-const initialComplaints = [
-  {
-    id: "CMP1001",
-    title: "Garbage Collection Issue",
-    category: "Garbage / Waste",
-    location: "Sector 15",
-    date: "05 September 2026",
+// Format backend complaint data for existing frontend components
+const formatComplaint = (complaint, user) => {
+  const date = complaint.created_at
+    ? new Date(complaint.created_at).toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      })
+    : "";
 
-    citizen: "Rahul Sharma",
-    email: "rahul@example.com",
+  return {
+    id: String(complaint.complaint_id),
+    title: complaint.title,
+    category: complaint.category_name,
+    location: complaint.location,
+    date,
 
-    description:
-      "Garbage has not been collected for the last two days in our area. The garbage bins are overflowing and creating an unhygienic condition.",
+    citizen: user?.name || "",
+    email: user?.email || "",
 
-    status: "Pending",
+    description: complaint.description,
+    status: complaint.status,
 
     assignedWorker: null,
-
     progress: 0,
-
     workNotes: "",
-
     evidence: null,
+    citizenVerified: complaint.status === "Resolved",
 
-    citizenVerified: false,
-  },
-
-  {
-    id: "CMP1002",
-    title: "Street Light Not Working",
-    category: "Street Light",
-    location: "Sector 21",
-    date: "03 September 2026",
-
-    citizen: "Priya Singh",
-    email: "priya@example.com",
-
-    description:
-      "The street light near the main road has not been working for several days, making the area unsafe at night.",
-
-    status: "In Progress",
-
-    assignedWorker: "Worker",
-
-    progress: 50,
-
-    workNotes: "",
-
-    evidence: null,
-
-    citizenVerified: false,
-  },
-
-  {
-    id: "CMP1003",
-    title: "Road Damage",
-    category: "Road Damage",
-    location: "Sector 10",
-    date: "01 September 2026",
-
-    citizen: "Amit Kumar",
-    email: "amit@example.com",
-
-    description:
-      "There is significant damage on the road surface which is causing difficulty for vehicles and pedestrians.",
-
-    status: "Resolved",
-
-    assignedWorker: "Worker",
-
-    progress: 100,
-
-    workNotes: "Road damage has been repaired successfully.",
-
-    evidence: null,
-
-    citizenVerified: true,
-  },
-];
+    // Preserve original backend fields
+    complaint_id: complaint.complaint_id,
+    category_id: complaint.category_id,
+    department_id: complaint.department_id,
+    department_name: complaint.department_name,
+    created_at: complaint.created_at,
+    updated_at: complaint.updated_at,
+  };
+};
 
 // Provider
 export function ComplaintProvider({ children }) {
-  const [complaints, setComplaints] = useState(initialComplaints);
+  const { token, user } = useAuth();
 
-  // Update any information of a complaint
+  const [complaints, setComplaints] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  // Fetch complaints belonging to the logged-in citizen
+  const refreshComplaints = useCallback(async () => {
+    if (!token || user?.role !== "citizen") {
+      setComplaints([]);
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const data = await apiRequest(
+        "/api/complaints/my",
+        { method: "GET" },
+        token,
+      );
+
+      const formattedComplaints = (data.complaints || []).map((complaint) =>
+        formatComplaint(complaint, user),
+      );
+
+      setComplaints(formattedComplaints);
+    } catch (err) {
+      setError(err.message || "Unable to load complaints.");
+    } finally {
+      setLoading(false);
+    }
+  }, [token, user]);
+
+  // Automatically fetch complaints after citizen login
+  useEffect(() => {
+    if (token && user?.role === "citizen") {
+      refreshComplaints();
+    } else {
+      setComplaints([]);
+      setError("");
+      setLoading(false);
+    }
+  }, [token, user?.role, refreshComplaints]);
+
+  // Update complaint information locally
   const updateComplaint = (complaintId, updates) => {
     setComplaints((currentComplaints) =>
       currentComplaints.map((complaint) =>
-        complaint.id === complaintId
-          ? {
-              ...complaint,
-              ...updates,
-            }
+        String(complaint.id) === String(complaintId)
+          ? { ...complaint, ...updates }
           : complaint,
       ),
     );
   };
 
-  // Add a new complaint
+  // Add complaint locally for existing component compatibility
   const addComplaint = (newComplaint) => {
-    setComplaints((currentComplaints) => [...currentComplaints, newComplaint]);
+    setComplaints((currentComplaints) => [newComplaint, ...currentComplaints]);
   };
 
   return (
     <ComplaintContext.Provider
       value={{
         complaints,
+        loading,
+        error,
         updateComplaint,
         addComplaint,
+        refreshComplaints,
       }}
     >
       {children}

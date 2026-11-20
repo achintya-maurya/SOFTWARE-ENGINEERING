@@ -1,70 +1,143 @@
+import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { useComplaints } from "../../context/ComplaintContext";
+
+import { apiRequest } from "../../api/api";
+import { useAuth } from "../../context/AuthContext";
+import DashboardLayout from "../../components/layout/DashboardLayout";
+
+import "../../App.css";
 
 function WorkerDashboard() {
-  const { complaints } = useComplaints();
+  const { token, user } = useAuth();
 
-  // For the frontend prototype, show complaints that
-  // have been assigned to a field worker.
-  const tasks = complaints.filter(
-    (complaint) =>
-      complaint.assignedWorker !== null && complaint.assignedWorker !== "",
-  );
+  const [assignments, setAssignments] = useState([]);
+  const [workerName, setWorkerName] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  // Statistics
-  const assignedTasks = tasks.filter(
-    (task) => task.status === "Assigned" || task.status === "Accepted",
+  // Fetch assignments belonging to the logged-in worker.
+  const fetchAssignments = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const data = await apiRequest(
+        "/api/worker/complaints",
+        { method: "GET" },
+        token,
+      );
+
+      setAssignments(data.assignments || []);
+      setWorkerName(data.worker_name || user?.name || "Field Worker");
+    } catch (err) {
+      setError(err.message || "Unable to load assigned tasks.");
+    } finally {
+      setLoading(false);
+    }
+  }, [token, user]);
+
+  useEffect(() => {
+    if (token) {
+      fetchAssignments();
+    }
+  }, [token, fetchAssignments]);
+
+  // Calculate statistics from actual assignment statuses.
+  const assignedTasks = assignments.filter(
+    (item) =>
+      item.assignment_status === "Assigned" ||
+      item.assignment_status === "Accepted",
   ).length;
 
-  const inProgressTasks = tasks.filter(
-    (task) => task.status === "In Progress",
+  const inProgressTasks = assignments.filter(
+    (item) => item.assignment_status === "In Progress",
   ).length;
 
-  const completedTasks = tasks.filter(
-    (task) => task.status === "Completed",
+  const completedTasks = assignments.filter(
+    (item) => item.assignment_status === "Completed",
   ).length;
+
+  // Format complaint ID.
+  const formatComplaintId = (id) => `CMP${String(id).padStart(4, "0")}`;
+
+  // Format date.
+  const formatDate = (date) => {
+    if (!date) return "N/A";
+
+    return new Date(date).toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
+  };
+
+  // Convert assignment status into CSS classes.
+  const getStatusClass = (status) => {
+    switch (status) {
+      case "Assigned":
+        return "assigned";
+
+      case "Accepted":
+        return "accepted";
+
+      case "In Progress":
+        return "in-progress";
+
+      case "Completed":
+        return "completed";
+
+      default:
+        return "";
+    }
+  };
 
   return (
-    <div className="worker-dashboard">
-      {/* Navbar */}
-      <nav className="worker-navbar">
-        <h2>Smart City</h2>
-
-        <div className="worker-nav-right">
-          <span>Field Worker</span>
-
-          <Link to="/">Logout</Link>
-        </div>
-      </nav>
-
-      {/* Main Content */}
-      <main className="worker-content">
-        {/* Header */}
+    <DashboardLayout>
+      <main className="worker-content worker-dashboard-content">
+        {/* Page Header */}
         <div className="worker-header">
           <div>
             <h1>Field Worker Dashboard</h1>
-
             <p>View and manage your assigned civic tasks.</p>
+            <p className="worker-welcome">
+              Welcome, {workerName || user?.name || "Field Worker"}
+            </p>
           </div>
+
+          <button
+            type="button"
+            className="worker-refresh-button"
+            onClick={fetchAssignments}
+            disabled={loading}
+          >
+            {loading ? "Loading..." : "Refresh"}
+          </button>
         </div>
+
+        {/* Error */}
+        {!loading && error && (
+          <div className="worker-error-message">
+            <p>{error}</p>
+            <button type="button" onClick={fetchAssignments}>
+              Retry
+            </button>
+          </div>
+        )}
 
         {/* Statistics */}
         <div className="worker-stats">
           <div className="worker-stat-card">
             <h3>Assigned Tasks</h3>
-
             <strong>{assignedTasks}</strong>
           </div>
 
           <div className="worker-stat-card">
             <h3>In Progress</h3>
-
             <strong>{inProgressTasks}</strong>
           </div>
 
           <div className="worker-stat-card">
             <h3>Completed</h3>
-
             <strong>{completedTasks}</strong>
           </div>
         </div>
@@ -73,59 +146,83 @@ function WorkerDashboard() {
         <section className="worker-tasks">
           <div className="worker-section-heading">
             <h2>Assigned Complaints</h2>
-
             <span>Manage your tasks</span>
           </div>
 
           <div className="worker-task-list">
-            {tasks.length === 0 ? (
+            {loading ? (
+              <div className="worker-empty-state">
+                <h3>Loading Tasks...</h3>
+                <p>Please wait while we fetch your assignments.</p>
+              </div>
+            ) : error ? (
+              <div className="worker-empty-state">
+                <h3>Unable to Load Tasks</h3>
+                <p>Use Retry to fetch your assignments again.</p>
+              </div>
+            ) : assignments.length === 0 ? (
               <div className="worker-empty-state">
                 <h3>No Assigned Tasks</h3>
-
                 <p>There are currently no complaints assigned to you.</p>
               </div>
             ) : (
-              tasks.map((task) => (
-                <div className="worker-task-card" key={task.id}>
-                  {/* Task Information */}
-                  <div className="worker-task-info">
-                    <h3>{task.title}</h3>
+              assignments.map((assignment) => {
+                const task = assignment.complaint;
 
-                    <p>Complaint ID: {task.id}</p>
+                if (!task) return null;
 
-                    <div className="worker-task-meta">
-                      <span>Category: {task.category}</span>
+                return (
+                  <div
+                    className="worker-task-card"
+                    key={assignment.assignment_id}
+                  >
+                    {/* Task Information */}
+                    <div className="worker-task-info">
+                      <h3>{task.title}</h3>
 
-                      <span>Location: {task.location}</span>
+                      <p>
+                        Complaint ID: {formatComplaintId(task.complaint_id)}
+                      </p>
 
-                      <span>Assigned: {task.date}</span>
+                      <div className="worker-task-meta">
+                        <span>Category: {task.category_name}</span>
+
+                        <span>Location: {task.location}</span>
+
+                        <span>
+                          Assigned: {formatDate(assignment.assigned_at)}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Status and Action */}
+                    <div className="worker-task-action">
+                      <span
+                        className={`worker-status ${getStatusClass(
+                          assignment.assignment_status,
+                        )}`}
+                      >
+                        {assignment.assignment_status}
+                      </span>
+
+                      <Link
+                        to={`/worker/task/${task.complaint_id}`}
+                        className="worker-view-button"
+                        state={{
+                          assignmentId: assignment.assignment_id,
+                        }}
+                      >
+                        View Task
+                      </Link>
                     </div>
                   </div>
-
-                  {/* Task Status & Action */}
-                  <div className="worker-task-action">
-                    <span
-                      className={`worker-status ${task.status
-                        .toLowerCase()
-                        .replace(" ", "-")}`}
-                    >
-                      {task.status}
-                    </span>
-
-                    <Link
-                      to={`/worker/task/${task.id}`}
-                      className="worker-view-button"
-                    >
-                      View Task
-                    </Link>
-                  </div>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
         </section>
       </main>
-    </div>
+    </DashboardLayout>
   );
 }
 
