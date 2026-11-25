@@ -1,3 +1,4 @@
+
 import os
 
 from dotenv import load_dotenv
@@ -6,12 +7,17 @@ from sqlalchemy.orm import sessionmaker
 
 load_dotenv()
 
+# Read database URL from environment variables
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 if not DATABASE_URL:
-    raise ValueError("DATABASE_URL is missing from the .env file")
+    raise ValueError("DATABASE_URL is missing")
 
-engine = create_engine(DATABASE_URL)
+# Render PostgreSQL connection
+engine = create_engine(
+    DATABASE_URL,
+    pool_pre_ping=True
+)
 
 SessionLocal = sessionmaker(
     autocommit=False,
