@@ -1,5 +1,7 @@
 # Smart City Civic Complaint and Management System
 
+🚀 **Live Demo:** [Open Smart City Civic Portal](https://smartcitycivic.netlify.app/)
+
 A web-based platform for reporting, tracking, assigning, and resolving civic complaints efficiently.
 
 ## Project Overview
@@ -18,16 +20,16 @@ It connects citizens, department officers, and field workers through a structure
 
 ## Technology Stack
 
-| Component | Technology |
-|---|---|
-| Frontend | React.js, Vite |
-| Backend | Python, FastAPI |
-| Database | PostgreSQL 18 |
-| ORM | SQLAlchemy |
-| Authentication | JWT |
-| Password Security | Argon2 |
-| API Documentation | Swagger UI |
-| Styling | CSS |
+| Component         | Technology      |
+| ----------------- | --------------- |
+| Frontend          | React.js, Vite  |
+| Backend           | Python, FastAPI |
+| Database          | PostgreSQL 18   |
+| ORM               | SQLAlchemy      |
+| Authentication    | JWT             |
+| Password Security | Argon2          |
+| API Documentation | Swagger UI      |
+| Styling           | CSS             |
 
 ## Complaint Workflow
 
