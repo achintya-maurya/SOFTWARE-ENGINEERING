@@ -1,0 +1,95 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[margin=0.85in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+
+\definecolor{navy}{RGB}{20,43,75}
+\definecolor{lightblue}{RGB}{235,242,250}
+\hypersetup{colorlinks=true,linkcolor=navy,urlcolor=navy}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlist[itemize]{leftmargin=*,itemsep=3pt,topsep=3pt}
+\titleformat{\section}{\large\bfseries\color{navy}}{}{0pt}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{navy}}{}{0pt}{}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Smart City Civic Complaint and Management System}
+\rhead{Project Journal 5}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\begin{document}
+
+\begin{center}
+    {\Large\bfseries\color{navy} PROJECT JOURNAL}\\[5pt]
+    {\large\bfseries Smart City Civic Complaint and Management System}\\[5pt]
+    {\large Journal No. 5}\\[8pt]
+    \begin{tabularx}{0.9\textwidth}{>{\bfseries}l X}
+        Team Members: & Achintya and Hittin \\
+        Work Area: & Backend Development and Integration \\
+        Date: & \rule{0.65\textwidth}{0.4pt}
+    \end{tabularx}
+\end{center}
+
+\vspace{5pt}
+\hrule
+\vspace{8pt}
+
+\section{Objective}
+To develop and integrate the backend of the Smart City Civic Complaint and Management System. The backend manages user authentication, complaint records, officer and worker operations, evidence uploads, status tracking, and communication with the PostgreSQL database.
+
+\section{Log 1: Backend Foundation and Database Integration}
+\textbf{Responsible team member: Achintya}
+
+\begin{itemize}
+    \item Set up the backend project using \textbf{FastAPI} and organized the application into separate modules for database connectivity, models, schemas, authentication, and security.
+    \item Configured the PostgreSQL database connection through environment variables using a \texttt{.env} file. Created the SQLAlchemy engine and session factory in \texttt{database.py}.
+    \item Implemented the database session dependency so that API routes can obtain a database session and close it safely after each request.
+    \item Created SQLAlchemy models for the main project entities: users, departments, categories, complaints, assignments, status history, complaint evidence, SLA escalations, notifications, and feedback.
+    \item Prepared request/response schemas to validate data received by backend APIs, including citizen registration and login, complaint creation, officer decisions, and worker assignments.
+    \item Implemented password hashing and password verification using the authentication utility. Added JWT access-token creation and verification for protected API requests.
+    \item Added current-user authentication to read the user ID and role from the bearer token. Protected routes use this information to restrict access according to the logged-in user's role.
+    \item Configured CORS middleware to allow requests from the React development frontend running on localhost ports 5173.
+    \item Added basic home and health-check routes to confirm that the FastAPI application starts and responds to requests.
+\end{itemize}
+
+\textbf{Result of Log 1:} The backend foundation, PostgreSQL connection, database models, request validation, and token-based authentication were prepared for the complaint-management workflow.
+
+\section{Log 2: Complaint Workflow, Role APIs, Evidence, and Deployment}
+\textbf{Responsible team member: Hittin}
+
+\begin{itemize}
+    \item Implemented citizen authentication APIs for registration, login, and retrieving the authenticated user's profile.
+    \item Implemented complaint APIs that allow a citizen to submit a complaint, view their own complaints, open complaint details, and view complaint status history.
+    \item Connected complaint categories with their relevant departments so that complaints such as road damage, streetlight, garbage, water supply, and drainage can be routed to the appropriate department.
+    \item Implemented officer APIs to view department complaints, verify or reject complaints, retrieve available workers, and assign verified complaints to workers.
+    \item Implemented worker APIs to view assigned complaints, retrieve worker details, accept an assignment, start work, update progress, and mark work as completed.
+    \item Implemented complaint-evidence upload and retrieval. The backend validates supported image formats (JPG, PNG, and WEBP) and file size before saving evidence records in the database and files on the server.
+    \item Added workflow status tracking. A database trigger records complaint status changes in the status-history table, allowing the complaint's progress to be reviewed later.
+    \item Integrated the backend APIs with the React frontend. The frontend sends HTTP requests to FastAPI and includes the JWT bearer token for protected operations.
+    \item Tested the main citizen, officer, and worker operations, including login, complaint submission, verification, worker assignment, progress updates, evidence upload, and completion verification.
+    \item Prepared the backend for cloud hosting on Render and connected it to the hosted PostgreSQL database. The deployed backend health endpoint was checked successfully.
+    \item Connected the deployed React frontend on Netlify with the Render backend and checked the live login and complaint workflow.
+\end{itemize}
+
+\textbf{Result of Log 2:} The main role-based complaint workflow was connected to the database and frontend. The backend was deployed on Render and the live application was verified through the Netlify frontend.
+
+\section{Overall Outcome}
+The backend now supports the core project workflow: citizen complaint submission, officer verification and worker assignment, worker progress updates and evidence submission, and citizen review of completed work. PostgreSQL stores the application records, while FastAPI provides the APIs used by the React frontend. The deployed frontend and backend were tested together successfully.
+
+\vspace{12pt}
+\begin{tabularx}{\textwidth}{X X}
+\centering\rule{0.8\linewidth}{0.4pt} & \centering\rule{0.8\linewidth}{0.4pt} \\
+\centering\textbf{Achintya} & \centering\textbf{Hittin} \\
+\centering\small Team Member & \centering\small Team Member
+\end{tabularx}
+
+\end{document}
