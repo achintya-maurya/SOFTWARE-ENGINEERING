@@ -1,18 +1,36 @@
-\contentsline {chapter}{\numberline {1}Introduction}{2}{chapter.1}%
-\contentsline {section}{\numberline {1.1}Background and Context}{2}{section.1.1}%
-\contentsline {subsection}{\numberline {1.1.1}Problem Statement}{3}{subsection.1.1.1}%
-\contentsline {section}{\numberline {1.2}Project Objectives}{3}{section.1.2}%
-\contentsline {chapter}{\numberline {2}Methodology and Design}{5}{chapter.2}%
-\contentsline {section}{\numberline {2.1}System Architecture}{5}{section.2.1}%
-\contentsline {subsection}{\numberline {2.1.1}High-Level Design}{6}{subsection.2.1.1}%
-\contentsline {subsection}{\numberline {2.1.2}Technical Stack}{12}{subsection.2.1.2}%
-\contentsline {section}{\numberline {2.2}Implementation Details}{12}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}Module 1: Core Functionality}{13}{subsection.2.2.1}%
-\contentsline {paragraph}{User Authentication}{13}{section*.12}%
-\contentsline {paragraph}{Citizen Dashboard}{14}{section*.14}%
-\contentsline {paragraph}{Complaint Tracking}{14}{section*.16}%
-\contentsline {paragraph}{Department Officer Dashboard}{15}{section*.19}%
-\contentsline {paragraph}{Complaint Review}{16}{section*.21}%
-\contentsline {paragraph}{Field Worker Dashboard}{17}{section*.23}%
-\contentsline {paragraph}{Task Management}{17}{section*.25}%
-\contentsline {paragraph}{Administrator Dashboard}{18}{section*.27}%
+\contentsline {chapter}{\numberline {1}Introduction}{5}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Background and Context}{5}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}Problem Statement}{5}{subsection.1.1.1}%
+\contentsline {section}{\numberline {1.2}Project Objectives}{6}{section.1.2}%
+\contentsline {chapter}{\numberline {2}Methodology and Design}{7}{chapter.2}%
+\contentsline {section}{\numberline {2.1}System Architecture}{7}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}High-Level Design}{8}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}System Actors and Use Cases}{8}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}Workflow Models}{9}{subsection.2.1.3}%
+\contentsline {subsection}{\numberline {2.1.4}Data Model}{12}{subsection.2.1.4}%
+\contentsline {subsection}{\numberline {2.1.5}Data Flow Diagrams}{13}{subsection.2.1.5}%
+\contentsline {subsubsection}{\numberline {2.1.5.1}Level 0 DFD: Context Diagram}{14}{subsubsection.2.1.5.1}%
+\contentsline {subsubsection}{\numberline {2.1.5.2}Level 1 DFD: Process Decomposition}{14}{subsubsection.2.1.5.2}%
+\contentsline {subsection}{\numberline {2.1.6}Technical Stack}{15}{subsection.2.1.6}%
+\contentsline {section}{\numberline {2.2}Implementation Details}{16}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Module 1: Core Functionality}{16}{subsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.1.1}Authentication and Role Checks}{16}{subsubsection.2.2.1.1}%
+\contentsline {subsubsection}{\numberline {2.2.1.2}Complaint Creation and Tracking}{16}{subsubsection.2.2.1.2}%
+\contentsline {subsubsection}{\numberline {2.2.1.3}Officer Review and Assignment}{16}{subsubsection.2.2.1.3}%
+\contentsline {subsubsection}{\numberline {2.2.1.4}Field Work and Resolution}{16}{subsubsection.2.2.1.4}%
+\contentsline {subsubsection}{\numberline {2.2.1.5}Evidence Handling}{16}{subsubsection.2.2.1.5}%
+\contentsline {subsubsection}{\numberline {2.2.1.6}Implemented Status Flow}{17}{subsubsection.2.2.1.6}%
+\contentsline {subsubsection}{\numberline {2.2.1.7}Frontend Screens}{17}{subsubsection.2.2.1.7}%
+\contentsline {subsection}{\numberline {2.2.2}Module 2: Secondary Features and Supporting Data}{21}{subsection.2.2.2}%
+\contentsline {chapter}{\numberline {3}Results and Evaluation}{22}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Testing Methodology}{22}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Performance Metrics}{22}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Analysis}{23}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Test Cases}{24}{section.3.4}%
+\contentsline {chapter}{\numberline {4}Conclusion}{27}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Summary of Work}{27}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Key Findings}{27}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Future Work and Recommendations}{27}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Final Remarks}{28}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Project Deployment}{28}{section.4.5}%
+\contentsline {chapter}{Bibliography}{29}{chapter*.22}%

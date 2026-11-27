@@ -1,9 +1,6 @@
 \documentclass[12pt,a4paper]{report}
 
-% ------------------------------------------------
-% Packages
-% ------------------------------------------------
-
+% TIET report-template layout and typography
 \usepackage[a4paper,margin=1in]{geometry}
 \usepackage[T1]{fontenc}
 \usepackage{newtxtext,newtxmath}
@@ -15,656 +12,522 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{caption}
+\usepackage{url}
 \usepackage[hidelinks]{hyperref}
 \usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{pdfpages}
 
 \setstretch{1.12}
-
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{6pt}
-
-% ------------------------------------------------
-% Header / Footer
-% ------------------------------------------------
+\setlist[itemize]{leftmargin=*,itemsep=2pt,topsep=3pt}
+\setlist[enumerate]{leftmargin=*,itemsep=2pt,topsep=3pt}
+\captionsetup{font=small,labelfont=bf}
+\graphicspath{{assets/}{../assets/}}
+\titleformat{\chapter}[display]{\normalfont\huge\bfseries}{\chaptername\ \thechapter}{12pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{0pt}{30pt}
+\titleformat{\section}[hang]{\normalfont\Large\bfseries}{\thesection}{1em}{}
+\titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
 
 \pagestyle{fancy}
 \fancyhf{}
 \fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0pt}
-
-% ------------------------------------------------
-% Document
-% ------------------------------------------------
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\thepage}\renewcommand{\headrulewidth}{0pt}}
 
 \begin{document}
 
-% =================================================
-% TITLE PAGE
-% =================================================
-
+% -----------------------------------------------------------------------------
+% Title page follows the supplied TIET template. Template placeholders were
+% replaced with the project and student information from the repository.
+% -----------------------------------------------------------------------------
 \begin{titlepage}
-
 \centering
-
 \vspace*{0.8in}
-
 {\Large\bfseries UCS503 -- Software Engineering\par}
-
 \vspace{0.3in}
-
 {\LARGE\bfseries Smart City Civic Complaint and Management System\par}
-
 \vspace{0.25in}
-
-{\large A Web-Based Platform for Civic Complaint Registration,
-Tracking and Resolution\par}
-
+{\large A Web-Based Platform for Civic Complaint Registration, Tracking and Resolution\par}
 \vspace{0.8in}
-
 \textbf{Submitted by:}\par
-
 \vspace{0.15in}
-
 1024170429 Achintya Maurya\par
 1024170437 Hittin Gupta\par
-
 \vspace{0.3in}
-
-\textbf{Group: 3Q41 BE Third Year, CSE}\par
-
-\textbf{BE Third Year, CSE}\par
-
+Group: 3Q41 BE Third Year, CSE\par
 \vspace{0.6in}
-
 \textbf{Submitted to:}\par
-
 \vspace{0.15in}
-
-Dr. Nisha Thakur\par
-
-Computer Science and Engineering Department\par
-
-Thapar Institute of Engineering and Technology, Patiala\par
-
+Nisha Thakur\par
 \vfill
-
-\textbf{Mid-Semester Evaluation}\par
-
-September 2026
-
+END-Semester Evaluation\par
+\textbf{Computer Science and Engineering Department}\par
+Thapar Institute of Engineering and Technology, Patiala\par
 \end{titlepage}
 
-
-% =================================================
-% TABLE OF CONTENTS
-% =================================================
-
 \tableofcontents
-\newpage
+\clearpage
+\listoffigures
+\clearpage
+\listoftables
+\clearpage
 
-
-% % =================================================
-% % LIST OF FIGURES
-% % =================================================
-
-% \listoffigures
-% \newpage
-
-
-% =================================================
-% CHAPTER 1
-% =================================================
-
+% =============================================================================
 \chapter{Introduction}
+% =============================================================================
 
 \section{Background and Context}
 
-Urban areas generate a large number of civic complaints related to roads, street lights, sanitation, drainage, waste management, public infrastructure, and other municipal services. In a conventional complaint-management process, citizens may have limited visibility into the status of their complaints after submitting them. Complaints can also require coordination between different departments and field-level workers before the reported issue is resolved.
+Municipal services receive reports about damaged roads, waste accumulation, drainage, water supply, street lighting, and other public infrastructure. A report can pass through several people before it is resolved: a resident describes the issue, an officer checks and routes it, and a field worker carries out the work. When these steps are recorded across separate channels, residents may not know whether a report was received, while staff may lack a shared view of its progress.
 
-The Smart City Civic Complaint and Management System is proposed as a web-based platform that provides a structured process for registering, managing, tracking, and resolving civic complaints. The system connects citizens with department officers and field workers through a centralized workflow.
+The Smart City Civic Complaint and Management System is a web application intended to make this process traceable. A resident creates a complaint with a category, title, description, department, and location. The application assigns a database identifier and records the initial status. A department officer reviews the report and can verify or reject it. A verified complaint can be assigned to a worker, who accepts the task, records progress, and uploads completion evidence. The resident can then confirm the reported resolution and leave feedback.
 
-A citizen can register or log in to the system, submit a complaint by providing relevant details and location information, and optionally upload a photograph as supporting evidence. The system generates a unique complaint ID and maintains the complaint information for further processing.
-
-After submission, the department officer can review and verify the complaint and assign an appropriate field worker. The field worker can view the assigned task, accept the work, update its progress, upload evidence, and mark the work as completed. The citizen can subsequently verify whether the reported issue has been resolved.
-
-The system therefore establishes a complete complaint lifecycle from submission to resolution and citizen verification. The project also considers smart assistance features such as complaint classification, duplicate detection, and priority calculation as planned extensions to the core system.
-
+The repository contains a React and Vite frontend, a Python FastAPI service, SQLAlchemy data models, and a PostgreSQL database connection layer. The interfaces and API endpoints cover the principal citizen, officer, and worker workflows. The project also contains an administrator dashboard in the frontend and data models for notifications and service-level escalations; the current backend does not expose a complete administrator-management API or notification/SLA processing workflow. Automated classification, duplicate detection, and priority scoring remain proposed enhancements.
 
 \subsection{Problem Statement}
 
-The existing complaint-handling process can involve several disconnected activities such as complaint registration, department assignment, field-level work, status updates, and resolution verification. Without a centralized system, it can be difficult for citizens to track complaints and for responsible personnel to maintain a consistent record of complaint progress.
-
-The specific problem addressed by this project is the lack of a structured and traceable platform for managing the complete lifecycle of civic complaints.
-
-The proposed system aims to provide:
-
-\begin{itemize}[leftmargin=*]
-
-\item A centralized platform for registering civic complaints.
-
-\item A structured mechanism for recording complaint details and location.
-
-\item Unique identification of every submitted complaint.
-
-\item Assignment of verified complaints to appropriate department officers and field workers.
-
-\item Continuous status updates during complaint resolution.
-
-\item Uploading of photographs and work evidence.
-
-\item Citizen verification of the completed work.
-
-\item An option to reopen a complaint when the issue has not been properly resolved.
-
-\item A foundation for future smart features such as classification, duplicate detection, and priority calculation.
-
-\end{itemize}
-
+The project addresses the need for one consistent record of a civic complaint from submission through staff action to resident verification. The system must associate each report with a resident, category, department, current state, and status history, while restricting actions according to user role. It must support a practical staff workflow without representing unimplemented smart features as completed functionality.
 
 \section{Project Objectives}
 
-The major objectives of the Smart City Civic Complaint and Management System are:
-
-\begin{enumerate}[leftmargin=*]
-
-\item To develop a centralized web-based platform through which citizens can register and submit civic complaints.
-
-\item To provide a structured complaint workflow covering complaint submission, verification, worker assignment, work progress, resolution, and citizen verification.
-
-\item To maintain complaint information such as category, description, location, photographs, status, and resolution details in an organized manner.
-
-\item To allow department officers to review complaints, verify their validity, assign field workers, and monitor complaint progress.
-
-\item To allow field workers to view assigned tasks, update work progress, upload work evidence, and mark tasks as completed.
-
-\item To provide citizens with complaint tracking and resolution verification functionality.
-
-\item To design the system in an incremental manner so that advanced features such as smart classification, duplicate detection, and priority calculation can be incorporated in later stages.
-
-\item To maintain a traceable record of the complaint lifecycle from initial submission to final closure.
-
+The project objectives are to:
+\begin{enumerate}
+\item Provide a web interface for citizen registration, sign-in, complaint creation, and complaint tracking.
+\item Implement role-specific sign-in and access checks for citizens, officers, and field workers.
+\item Support officer review, verification or rejection, and assignment of a complaint to a department worker.
+\item Support task acceptance, work progress updates, notes, completion evidence, and task completion.
+\item Record complaint state changes and support citizen resolution verification and feedback.
+\item Persist core entities in PostgreSQL through SQLAlchemy models and expose the workflows through REST-style FastAPI endpoints.
+\item Evaluate the delivered system against its implemented workflow and document limitations and future work.
 \end{enumerate}
 
-
-% =================================================
-% CHAPTER 2
-% =================================================
-
+% =============================================================================
 \chapter{Methodology and Design}
+% =============================================================================
 
 \section{System Architecture}
 
-The Smart City Civic Complaint and Management System follows a modular web-based architecture in which different users interact with the system according to their responsibilities.
+The implementation uses a browser-based client and a server-side API. React renders role-specific pages and sends HTTP requests to FastAPI. The API validates request data, checks the bearer token and role, uses SQLAlchemy sessions to read or update records, and stores persistent application data in PostgreSQL. Complaint photographs are saved in the backend upload directory, with metadata recorded in the evidence table.
 
-The major participants in the system are:
-
-\begin{itemize}[leftmargin=*]
-
-\item \textbf{Citizen:} Registers or logs in, submits complaints, tracks complaint status, verifies resolution, provides feedback, and can reopen an unresolved complaint.
-
-\item \textbf{Department Officer:} Reviews and verifies complaints, assigns field workers, monitors progress, and manages complaint status.
-
-\item \textbf{Field Worker:} Views assigned tasks, accepts work, performs the required work, updates progress, uploads evidence, and marks the work as completed.
-
-\item \textbf{Administrator:} Manages users, departments, workers, and overall complaint information.
-
-\end{itemize}
-
-The system is designed around a central complaint-management workflow. Complaint information submitted by a citizen is processed by the system and subsequently handled by the department officer and field worker.
-
-The general workflow is:
-
-\[
-\text{Citizen}
-\rightarrow
-\text{Complaint Submission}
-\rightarrow
-\text{Officer Verification}
-\rightarrow
-\text{Worker Assignment}
-\rightarrow
-\text{Work Execution}
-\rightarrow
-\text{Resolution}
-\rightarrow
-\text{Citizen Verification}
-\]
-
-This architecture provides a clear separation of responsibilities between the different actors while maintaining a common complaint lifecycle.
-
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.87\textwidth,height=0.62\textheight,keepaspectratio]{component_diagram.png}
+\caption{Component view prepared for the project. Smart services shown in the design are proposed extensions unless identified as implemented in this report.}
+\label{fig:component}
+\end{figure}
 
 \subsection{High-Level Design}
 
-At a high level, the system can be divided into the following functional components:
-
-\begin{enumerate}[leftmargin=*]
-
-\item \textbf{Citizen Interface}
-
-The citizen interface provides functionality for registration/login, complaint submission, entering complaint details, providing location information, uploading photographs, tracking complaint status, and verifying resolution.
-
-\item \textbf{Complaint Management Layer}
-
-This layer manages the complaint lifecycle. It handles complaint registration, generation of complaint IDs, status management, verification, assignment, and closure.
-
-\item \textbf{Department Officer Module}
-
-The department officer module provides functionality for reviewing complaints, verifying their validity, assigning field workers, and monitoring the progress of complaints.
-
-\item \textbf{Field Worker Module}
-
-The field worker module allows workers to view assigned tasks, accept work, update progress, upload work evidence, and mark work as completed.
-
-\item \textbf{Administration Module}
-
-The administration module is responsible for managing users, departments, workers, and overall complaint monitoring.
-
-\item \textbf{Smart Assistance Layer}
-
-The proposed smart assistance layer contains planned features such as smart classification, duplicate detection, and priority calculation. These features are intended to be introduced after the core complaint workflow is stable.
-
+The system is divided into these layers:
+\begin{enumerate}
+\item \textbf{Presentation layer:} React pages for account access and citizen, officer, worker, and administrator views. Protected routes restrict the citizen, officer, and worker pages by the signed-in role.
+\item \textbf{API layer:} FastAPI routes implement registration, sign-in, complaint operations, staff actions, evidence access, and resolution/feedback operations. Pydantic schemas validate request fields.
+\item \textbf{Application and access-control layer:} Route handlers enforce ownership and department boundaries, validate allowed transitions, and coordinate database writes.
+\item \textbf{Persistence layer:} SQLAlchemy maps Python classes to PostgreSQL tables. Foreign keys, uniqueness rules, and check constraints preserve core relationships and valid status or rating ranges.
+\item \textbf{Evidence storage:} Uploaded image files are stored on the backend filesystem; rows in \texttt{complaint\_evidence} associate a file path, uploader, type, and time with a complaint.
 \end{enumerate}
 
+The main operational flow is:
+\begin{center}\small
+Citizen submission $\rightarrow$ Officer review $\rightarrow$ Worker assignment
+$\rightarrow$ Work and evidence $\rightarrow$ Citizen verification $\rightarrow$ Resolution
+\end{center}
 
-% ------------------------------------------------
-% USE CASE DIAGRAM
-% ------------------------------------------------
+\subsection{System Actors and Use Cases}
 
-\subsubsection*{Use Case Diagram}
-
-The Use Case Diagram represents the major actors of the system and the
-functions available to each actor. It establishes the functional boundary of
-the proposed system and shows the interaction between citizens, department
-officers, field workers, administrators, and the system.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.90\textwidth]{../assets/Use_case.drawio.png}
-    \caption{Use Case Diagram of the Smart City Civic Complaint and Management System}
-    \label{fig:usecase}
-\end{figure}
-
-The diagram identifies four primary actors: Citizen, Department Officer, Field Worker, and Administrator. The citizen is responsible for complaint creation and verification, the department officer manages verification and assignment, the field worker performs the assigned work, and the administrator manages system-level information.
-
-The diagram also represents the planned smart assistance features including Smart Classification, Duplicate Detection, and Priority Calculation.
-
-
-% ------------------------------------------------
-% ACTIVITY DIAGRAM
-% ------------------------------------------------
-
-\subsubsection*{Activity Diagram}
-
-The Activity Diagram represents the complete workflow of the Smart City Civic Complaint and Management System. It shows the sequence of activities starting from citizen login and complaint submission to complaint verification, worker assignment, work completion, and final citizen verification.
+\begin{longtable}{p{0.20\textwidth}p{0.72\textwidth}}
+\toprule
+\textbf{Actor} & \textbf{Responsibilities represented in the project} \\
+\midrule
+Citizen & Register and sign in; create complaints; view own complaints and status history; upload and view complaint photographs; verify completed work; submit feedback. \\
+Department officer & Sign in; list complaints for the officer's department; inspect complaint details and evidence; verify or reject pending complaints; assign workers; view department workers. \\
+Field worker & Sign in; view assigned complaints; accept and start work; save progress and work notes; upload completion evidence; complete a task. \\
+Administrator & A dashboard page is present in the frontend. The current API has no matching administrator sign-in or management routes, so the page is not treated as a fully integrated administrative workflow. \\
+\bottomrule
+\end{longtable}
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.70\textwidth]{../assets/activity_diagram.png}
-    \caption{Activity Diagram of the Smart City Civic Complaint and Management System}
-    \label{fig:activity}
+\centering
+\includegraphics[width=0.90\textwidth,height=0.64\textheight,keepaspectratio]{Use_case.drawio.png}
+\caption{Use Case Diagram of the Smart City Civic Complaint and Management System}
+\label{fig:usecase}
 \end{figure}
 
+\subsection{Workflow Models}
 
-% ------------------------------------------------
-% SEQUENCE DIAGRAM
-% ------------------------------------------------
-
-\subsubsection*{Sequence Diagram}
-
-The Sequence Diagram illustrates the chronological interaction between the Citizen, Smart City System, Department Officer, and Field Worker during the complaint management process. It shows how requests, responses, notifications, verification, worker assignment, progress updates, and resolution are exchanged between the different participants.
+The Activity Diagram presents the end-to-end process, while the Sequence Diagram and Swimlane Diagram show message ordering and the allocation of activities among participants. The Collaboration Diagram summarizes the objects involved and their communications. These are design artifacts; this report distinguishes them from behavior implemented in the source code.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.60\textwidth]{../assets/Sequence.drawio.png}
-    \caption{Sequence Diagram of the Smart City Civic Complaint and Management System}
-    \label{fig:sequence}
+\centering
+\includegraphics[width=0.70\textwidth,height=0.64\textheight,keepaspectratio]{activity_diagram.png}
+\caption{Activity Diagram of complaint processing}
+\label{fig:activity}
 \end{figure}
-
-
-% ------------------------------------------------
-% SWIMLANE DIAGRAM
-% ------------------------------------------------
-
-\subsubsection*{Swimlane Diagram}
-
-The Swimlane Diagram divides the complaint management workflow according to the
-responsibility of each participant. It shows which activities are performed by
-the Citizen, Smart City System, Department Officer, and Field Worker, making
-the distribution of responsibilities clear.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.90\textwidth]{../assets/Swimlane.png}
-    \caption{Swimlane Diagram of the Smart City Civic Complaint and Management System}
-    \label{fig:swimlane}
+\centering
+\includegraphics[width=0.76\textwidth,height=0.64\textheight,keepaspectratio]{Sequence.drawio.png}
+\caption{Sequence Diagram of the complaint workflow}
+\label{fig:sequence}
 \end{figure}
-
-
-% ------------------------------------------------
-% COLLABORATION DIAGRAM
-% ------------------------------------------------
-
-\subsubsection*{Collaboration Diagram}
-
-The Collaboration Diagram represents the interaction and communication between the major objects involved in the complaint management system. It focuses on the messages exchanged between the Citizen, Smart City System, Department Officer, and Field Worker to complete the complaint lifecycle.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.90\textwidth]{../assets/Collaboration.png}
-    \caption{Collaboration Diagram of the Smart City Civic Complaint and Management System}
-    \label{fig:collaboration}
+\centering
+\includegraphics[width=0.75\textwidth,height=0.64\textheight,keepaspectratio]{Swimlane.png}
+\caption{Swimlane Diagram showing participant responsibilities}
+\label{fig:swimlane}
 \end{figure}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth,height=0.64\textheight,keepaspectratio]{Collaboration.png}
+\caption{Collaboration Diagram of system interactions}
+\label{fig:collaboration}
+\end{figure}
+
+\subsection{Data Model}
+
+The SQLAlchemy models define ten tables. The central complaint row references its citizen, category, and department. Related tables record assignments, status transitions, and evidence. Additional tables represent feedback, notifications, and SLA escalations; the presence of a model alone does not mean a related application workflow is exposed or active.
+
+\begin{longtable}{p{0.24\textwidth}p{0.68\textwidth}}
+\toprule
+\textbf{Table} & \textbf{Purpose and constraints represented in the model} \\
+\midrule
+\texttt{users} & Identity, unique email, password hash, role, and optional department. Officer/worker roles require a department. \\
+\texttt{departments} & Department name and description. \\
+\texttt{categories} & Unique complaint category names and descriptions. \\
+\texttt{complaints} & Citizen, category, department, title, description, location, status, and timestamps. Status is constrained to the declared lifecycle values. \\
+\texttt{assignments} & Worker assignment, assigning officer, assignment dates, status, progress from 0 to 100, and work notes. \\
+\texttt{status\_history} & Actor, prior and new status, remarks, and timestamp for an auditable transition history. \\
+\texttt{complaint\_evidence} & Complaint, uploader, media type, stored path, and upload time. \\
+\texttt{feedback} & Citizen rating and comments; rating is constrained to 1--5 and each resolution cycle has a unique feedback record. \\
+\texttt{notifications} & Notification message, recipient, optional complaint, read flag, and time. \\
+\texttt{sla\_escalations} & Escalation level, reason, status, and time for a future or separately operated SLA workflow. \\
+\bottomrule
+\end{longtable}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth,height=0.64\textheight,keepaspectratio]{class_diagram.drawio.png}
+\caption{Class Diagram prepared during system design}
+\label{fig:class}
+\end{figure}
+
+\subsection{Data Flow Diagrams}
+
+Data Flow Diagrams (DFDs) illustrate how information enters, moves through,
+and is stored by the Smart City Civic Complaint and Management System. The
+Level 0 diagram presents the system as a single process and identifies the
+external entities that exchange information with it. The Level 1 diagram
+decomposes the system into its principal processes and shows their interaction
+with the PostgreSQL data store.
+
+\subsubsection{Level 0 DFD: Context Diagram}
+
+The context diagram identifies three external entities: the Citizen,
+Department Officer, and Field Worker. Citizens provide registration and login
+details, complaint information, location and photographs, and resolution
+feedback. Department Officers provide review decisions and worker-assignment
+instructions. Field Workers provide task acceptance, progress updates, work
+notes, and completion evidence. The system returns authentication results,
+complaint identifiers, task details, and complaint-status information to the
+respective users.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.96\textwidth,height=0.66\textheight,keepaspectratio]{DFD_Level_0.png}
+\caption{Level 0 Data Flow Diagram (Context Diagram)}
+\label{fig:dfd-level-0}
+\end{figure}
+
+\subsubsection{Level 1 DFD: Process Decomposition}
+
+The Level 1 DFD expands the system into five major processes: (1) User
+Authentication and Role Validation, (2) Complaint Submission and Evidence,
+(3) Officer Review and Assignment, (4) Worker Task Execution, and
+(5) Tracking, Resolution and Feedback. These processes read and update the
+shared PostgreSQL data store, which contains user, complaint, assignment,
+status-history, complaint-evidence, and feedback records. The diagram also
+shows the hand-off of a verified complaint to the assigned worker and the
+availability of completed work information for citizen verification.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.98\textwidth,height=0.68\textheight,keepaspectratio]{DFD_Level_1.png}
+\caption{Level 1 Data Flow Diagram of the Smart City Civic Complaint and Management System}
+\label{fig:dfd-level-1}
+\end{figure}
 
 \subsection{Technical Stack}
 
-The project is being developed as a web-based application using technologies suitable for frontend development and subsequent backend integration.
-
-\begin{longtable}{p{0.25\textwidth} p{0.65\textwidth}}
-
+\begin{longtable}{p{0.27\textwidth}p{0.65\textwidth}}
 \toprule
-\textbf{Technology / Tool} & \textbf{Purpose} \\
+\textbf{Technology} & \textbf{Use in this project} \\
 \midrule
-
-HTML & Structure and content of the web pages. \\
-
-CSS & Styling, layout, spacing, typography, and visual presentation of the interface. \\
-
-JavaScript & Client-side interaction and dynamic behaviour of the frontend. \\
-
-VS Code & Primary development environment used for writing and managing project files. \\
-
-Git & Version control for maintaining project history and tracking changes. \\
-
-GitHub & Remote repository used for project collaboration and storage. \\
-
-Draw.io & Used for preparing Software Engineering diagrams such as Use Case, Activity, Swimlane, and Collaboration Diagrams. \\
-
+React 19 and JavaScript/JSX & Component-based frontend and role-specific pages. \\
+Vite & Frontend development server and build tooling. \\
+React Router & Client-side page routing and protected route integration. \\
+CSS & Application layout, design system, authentication screens, and dashboards. \\
+Python and FastAPI & HTTP API, request handling, dependency injection, and interactive API documentation. \\
+Pydantic & Validation of registration, login, complaint, decision, and assignment request bodies. \\
+SQLAlchemy & ORM models, database engine, and session-based persistence. \\
+PostgreSQL & Relational persistence configured through the \texttt{DATABASE\_URL} environment variable. \\
+JWT and password hashing & Signed access tokens expire after 30 minutes; passwords are stored as hashes through \texttt{pwdlib}. \\
+Git and GitHub & Source history and collaboration, as described in the project README. \\
+Draw.io & Preparation of the software design diagrams. \\
 \bottomrule
-
 \end{longtable}
-
-The current implementation primarily focuses on the frontend and the core user interface. Backend functionality and database integration can be incorporated in subsequent development stages.
-
 
 \section{Implementation Details}
 
-The implementation follows the functional workflow established during the system design phase.
-
-The core implementation is organized around the complaint lifecycle. Instead of treating complaint submission, assignment, work execution, and resolution as independent processes, they are connected through complaint status and a unique complaint identifier.
-
-The major stages of the implementation are:
-
-\begin{enumerate}[leftmargin=*]
-
-\item User registration and login.
-
-\item Complaint submission.
-
-\item Entry of complaint details.
-
-\item Location and photograph submission.
-
-\item Generation of a complaint ID.
-
-\item Complaint review and verification.
-
-\item Assignment of a field worker.
-
-\item Field work and progress updates.
-
-\item Uploading of work evidence.
-
-\item Completion of the assigned work.
-
-\item Citizen verification of the resolution.
-
-\item Closing or reopening of the complaint.
-
-\end{enumerate}
-
-This modular approach allows individual parts of the system to be developed and tested independently while maintaining the overall complaint workflow.
-
-
-% =================================================
-% 2.2.1 MODULE 1
-% =================================================
-
 \subsection{Module 1: Core Functionality}
 
-The Core Functionality module provides the main complaint management features
-of the Smart City Civic Complaint and Management System. The module supports
-different users of the system, including Citizens, Department Officers,
-Field Workers, and Administrators. Each user is provided with an appropriate
-interface according to their role.
+\subsubsection{Authentication and Role Checks}
 
-The module covers user authentication, role-based dashboards, complaint
-tracking, complaint review, field task management, and overall complaint
-monitoring.
+Citizens can register through \texttt{/api/auth/register}; the request schema requires a name, email, and password of at least eight characters. Citizen, officer, and worker sign-in use separate routes. The service hashes passwords using \texttt{pwdlib}, issues a signed JWT containing the user identifier, role, and expiry, and expects a bearer token for protected routes. Role checks and ownership filters are applied in route handlers. The frontend stores the token and user summary in \texttt{sessionStorage} and uses role-aware protected routes.
 
-\paragraph{User Authentication}
+\subsubsection{Complaint Creation and Tracking}
 
-The system provides a login interface through which users can enter their
-email address and password. The user can also select the appropriate role,
-such as Citizen, Officer, or Field Worker, before logging into the system.
-A registration option is also provided for new users.
+An authenticated citizen submits a category, department, title, description, and location. The backend checks that the category and department exist, creates a complaint with status \emph{Pending Verification}, and writes the initial status-history row in the same database operation. Citizens can list their own complaints, retrieve complaint details, and retrieve chronological status history. Complaint list queries join the category and department names for display.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.90\textwidth]{assets/login.png}
-    \caption{User Login Interface}
-    \label{fig:login}
-\end{figure}
+\subsubsection{Officer Review and Assignment}
 
-The login interface provides a simple and centralized entry point to the
-system. After successful authentication, the user is redirected to the
-dashboard corresponding to their selected role.
+The officer API filters complaints to the officer's department. A complaint can be verified or rejected while it is pending verification. Assignment creates an assignment record and moves the complaint to \emph{Assigned}; the officer API also exposes workers for the officer's department. This keeps department scoping in the backend rather than relying only on the frontend.
 
-\paragraph{Citizen Dashboard}
+\subsubsection{Field Work and Resolution}
 
-The Citizen Dashboard provides an overview of the complaints submitted by
-the citizen. It displays the total number of complaints along with their
-current status, including pending, in-progress, and resolved complaints.
-The dashboard also provides an option to submit a new complaint and displays
-recent complaints for quick access.
+Workers can retrieve assigned tasks, accept them, start work, save progress, and complete the assignment. The assignment model constrains progress to the range 0--100. Completion marks the complaint \emph{Completed}. A separate citizen action verifies completed work and moves the complaint to \emph{Resolved}. The API also accepts feedback and derives a resolution-cycle number from the complaint's resolution history.
+
+\subsubsection{Evidence Handling}
+
+Citizens can upload complaint photographs and workers can upload completion photographs. The backend checks role and complaint or assignment access before accepting files, writes the file to the evidence directory, and records metadata in the database. Worker completion evidence is limited to three photographs per complaint. Evidence listing and file retrieval routes apply access checks so a user cannot use a public file URL to bypass complaint permissions.
+
+\subsubsection{Implemented Status Flow}
+
+The principal status path supported by the database and API is:
+\begin{center}\small
+Pending Verification $\rightarrow$ Verified $\rightarrow$ Assigned $\rightarrow$
+Accepted $\rightarrow$ In Progress $\rightarrow$ Completed $\rightarrow$ Resolved
+\end{center}
+A pending complaint can also be rejected. The model permits a \emph{Reopened} state, and the frontend contains a reopened-state display; a complete citizen reopen API is not present in the listed backend routes. The report therefore treats reopening as a represented state, not a fully delivered end-to-end operation.
+
+\subsubsection{Frontend Screens}
+
+The project includes login and registration, citizen dashboard, complaint submission, complaint list and details, officer dashboard and review, worker dashboard and task details, and an administrator dashboard. The report's screenshot set documents the login and primary dashboard/detail interfaces. The citizen, officer, and worker views call backend APIs. The administrator dashboard currently does not have a corresponding API integration in the backend.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.90\textwidth]{assets/citizen_dashboard.png}
-    \caption{Citizen Dashboard}
-    \label{fig:citizendashboard}
+\centering
+\includegraphics[width=0.90\textwidth]{login.png}
+\caption{Login interface}
+\label{fig:login}
 \end{figure}
-
-The dashboard allows citizens to monitor their complaints without requiring
-them to repeatedly contact the concerned department. The recent complaints
-section displays important information such as the complaint title,
-complaint ID, location, and current status.
-
-\paragraph{Complaint Tracking}
-
-Citizens can access the ``My Complaints'' section to view all complaints
-submitted through the system. Each complaint displays its complaint ID,
-category, location, submission date, and current status. A ``View Details''
-option allows the citizen to inspect an individual complaint.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.90\textwidth]{assets/my_complaints.png}
-    \caption{Citizen My Complaints Interface}
-    \label{fig:mycomplaints}
+\centering
+\includegraphics[width=0.90\textwidth]{citizen_dashboard.png}
+\caption{Citizen dashboard}
+\label{fig:citizen-dashboard}
 \end{figure}
-
-The complaint details interface provides more detailed information about a
-selected complaint. It displays the complaint title, complaint ID, category,
-location, submission date, status, description, and complaint timeline.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.90\textwidth]{assets/complaint_details.png}
-    \caption{Complaint Details and Status Interface}
-    \label{fig:complaintdetails}
+\centering
+\includegraphics[width=0.90\textwidth]{my_complaints.png}
+\caption{Citizen complaint list}
+\label{fig:my-complaints}
 \end{figure}
-
-This functionality enables citizens to track the progress of their submitted
-complaints and view the current state of the complaint management process.
-
-\paragraph{Department Officer Dashboard}
-
-The Department Officer Dashboard is designed for reviewing and managing
-citizen complaints. It provides a summary of total complaints, pending
-verification, complaints in progress, and resolved complaints.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.90\textwidth]{assets/officer_dashboard.png}
-    \caption{Department Officer Dashboard}
-    \label{fig:officerdashboard}
+\centering
+\includegraphics[width=0.90\textwidth]{complaint_details.png}
+\caption{Complaint details and tracking interface}
+\label{fig:complaint-details}
 \end{figure}
-
-The dashboard also provides a list of recent complaints. The officer can
-select a complaint and use the review functionality to inspect the complaint
-before taking further action.
-
-\paragraph{Complaint Review}
-
-The complaint review interface allows the Department Officer to examine the
-details of a submitted complaint. Information such as the complaint ID,
-category, location, submitted date, citizen information, email, status, and
-description is displayed.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.90\textwidth]{assets/review_complaint.png}
-    \caption{Department Officer Complaint Review Interface}
-    \label{fig:reviewcomplaint}
+\centering
+\includegraphics[width=0.90\textwidth]{officer_dashboard.png}
+\caption{Department officer dashboard}
+\label{fig:officer-dashboard}
 \end{figure}
-
-This functionality provides the officer with the information required to
-verify and manage a complaint before it is processed further.
-
-\paragraph{Field Worker Dashboard}
-
-The Field Worker Dashboard provides field workers with an overview of the
-complaints or tasks assigned to them. The dashboard displays the number of
-assigned tasks, tasks currently in progress, and completed tasks.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.90\textwidth]{assets/field_worker_dashboard.png}
-    \caption{Field Worker Dashboard}
-    \label{fig:fieldworkerdashboard}
+\centering
+\includegraphics[width=0.90\textwidth]{review_complaint.png}
+\caption{Officer complaint review interface}
+\label{fig:review-complaint}
 \end{figure}
-
-The assigned complaints section provides information such as the complaint
-title, complaint ID, category, location, assigned date, and current status.
-The field worker can open an assigned task to view its complete details.
-
-\paragraph{Task Management}
-
-The Task Details interface provides the field worker with information about
-the assigned complaint. It displays the category, location, assigned date,
-assigned authority, current status, and complaint description.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.90\textwidth]{assets/task_details.png}
-    \caption{Field Worker Task Details Interface}
-    \label{fig:taskdetails}
+\centering
+\includegraphics[width=0.90\textwidth]{field_worker_dashboard.png}
+\caption{Field worker dashboard}
+\label{fig:worker-dashboard}
 \end{figure}
 
-The interface also contains a Worker Action section through which the field
-worker can update the progress of the assigned work. This supports the
-transition of a complaint from assignment to field-level resolution.
 
-\paragraph{Administrator Dashboard}
-
-The Administrator Dashboard provides an overall view of complaints across
-the system. It displays complaint statistics such as total complaints,
-pending complaints, complaints in progress, completed complaints, resolved
-complaints, and reopened complaints.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.90\textwidth]{assets/admin_dashboard.png}
-    \caption{Administrator Dashboard}
-    \label{fig:admindashboard}
+\centering
+\includegraphics[width=0.90\textwidth]{admin_dashboard.png}
+\caption{Administrator dashboard page present in the frontend}
+\label{fig:admin-dashboard}
 \end{figure}
 
-The complaint management section allows the administrator to monitor the
-current status of complaints and view information such as complaint ID,
-category, location, date, and assigned worker.
+\subsection{Module 2: Secondary Features and Supporting Data}
 
-Overall, the Core Functionality module establishes the main workflow of the
-system. A citizen can submit and track complaints, a Department Officer can
-review and manage complaints, a Field Worker can handle assigned tasks and
-update their progress, and an Administrator can monitor complaints across
-the system.
+The implementation includes supporting behavior beyond the central status transitions: complaint evidence upload and protected retrieval, chronological status history, worker progress and notes, resident feedback with a resolution-cycle key, and initial health routes. The database also defines notification and SLA escalation entities, but the repository does not contain corresponding operational routes or a scheduler that processes those records. Similarly, automated complaint classification, duplicate detection, priority scoring, maps, and hotspot analytics appear in planning/design material and remain future work.
 
 
-% ------------------------------------------------
-% CORE COMPLAINT STATUS FLOW
-% ------------------------------------------------
+% =============================================================================
+\chapter{Results and Evaluation}
+% =============================================================================
 
-\subsubsection*{Core Complaint Status Flow}
+\section{Testing Methodology}
 
-The core module maintains a logical sequence of complaint states:
+The repository includes two small Python verification scripts: one checks database connectivity, and one reports the SQLAlchemy model tables. These scripts do not constitute an automated API test suite. The individual project journals record browser checks of the frontend flows and interface states during development. This evaluation combines those project records with a source-level inspection of routes, schemas, models, and frontend integration. No load test, response-time measurement, controlled user study, or independent end-to-end test run is claimed in this report.
 
-\[
-\text{Submitted}
-\rightarrow
-\text{Under Review}
-\rightarrow
-\text{Verified}
-\rightarrow
-\text{Assigned}
-\rightarrow
-\text{In Progress}
-\rightarrow
-\text{Completed}
-\rightarrow
-\text{Closed}
-\]
-
-If the complaint is rejected during verification, it follows the rejection path. Similarly, if the citizen is not satisfied with the resolution, the complaint can be reopened and sent for further action.
-
-The status-based approach provides a traceable representation of the complaint lifecycle and allows the different system actors to understand the current state of a complaint.
-
-
-% ------------------------------------------------
-% FRONTEND IMPLEMENTATION
-% ------------------------------------------------
-
-\subsubsection*{Frontend Implementation}
-
-The current frontend implementation focuses on presenting the core functionality through separate interfaces for the different users.
-
-The main frontend screens include:
-
-\begin{itemize}[leftmargin=*]
-
-\item Login / Registration page.
-
-\item Citizen dashboard.
-
-\item Complaint submission form.
-
-\item Complaint tracking interface.
-
-\item Department officer complaint management interface.
-
-\item Field worker task interface.
-
-\item Work progress and evidence interface.
-
-\item Resolution verification interface.
-
+The evaluation categories are:
+\begin{itemize}
+\item \textbf{Component review:} inspect the registration, login, role-aware page routing, complaint forms, and dashboards.
+\item \textbf{Integration review:} trace frontend requests to corresponding API routes and data models for citizen, officer, and worker operations.
+\item \textbf{Workflow review:} compare the intended status path with the status changes in the backend handlers and schema constraints.
+\item \textbf{Persistence and access review:} inspect database foreign keys, ownership/department filters, evidence access checks, and status history writes.
 \end{itemize}
 
-The frontend is structured so that the interface reflects the responsibilities established in the system design. The citizen interacts mainly with complaint creation and verification, while officer and worker interfaces support the processing and resolution stages.
+
+\section{Performance Metrics}
+
+Since a formal load-testing exercise was not part of the supplied project
+evidence, the values in Table~\ref{tab:performance} are indicative engineering
+estimates for a small academic prototype running in a local development
+environment. They are included to provide a preliminary performance profile;
+they are not measured benchmark results and should be replaced with actual
+measurements before making production-readiness claims.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{p{0.28\textwidth}p{0.25\textwidth}p{0.31\textwidth}}
+\toprule
+\textbf{Metric} & \textbf{Indicative target} & \textbf{Estimated value} \\
+\midrule
+Login response time & Under 2.0 seconds & 0.8 seconds \\
+Complaint submission response time & Under 3.0 seconds & 1.5 seconds \\
+Dashboard initial load time & Under 3.0 seconds & 1.8 seconds \\
+Throughput under light load & At least 10 requests/second & 15 requests/second \\
+Concurrent active users (prototype estimate) & 20 users & 20 users \\
+Functional test-step pass rate & 100\% of supplied steps & 8/8 (100\%) \\
+\bottomrule
+\end{tabular}
+\caption{Preliminary performance estimates and documented functional test outcome}
+\label{tab:performance}
+\end{table}
+
+The response-time, throughput, and concurrent-user figures are plausible
+planning estimates for a lightweight prototype, not observations collected
+using a profiler or load-testing tool. Actual values will depend on the
+machine, network, database configuration, request payloads, and deployment
+environment. The functional test-step pass rate is different: it is calculated
+from the two supplied test cases, each of which records four passing steps.
+Therefore, 8 of 8 recorded steps passed, but this does not represent 100\%
+coverage of all system requirements.
+
+\section{Analysis}
+
+The core workflow is represented across user interfaces, API routes, and relational models, which is a stronger implementation state than the earlier report draft described. Status history, department-scoped officer queries, citizen ownership checks, worker assignment, evidence metadata, and completion verification give the complaint lifecycle traceability. The database constraints also prevent several invalid values, including unknown roles, unsupported complaint statuses, progress outside 0--100, and ratings outside 1--5.
+
+The evidence supports the project objectives of providing a connected complaint workflow and persistent data model. Some objectives are only partly met: administrator pages are not backed by a complete administrator API; the schema's notification and SLA concepts do not have active processing flows; reopening is represented but lacks a complete backend action; and smart assistance remains a future extension. Because this report did not execute a benchmark or full end-to-end suite, it makes no claim about production readiness, measured performance, or defect-free behavior.
 
 
-% =================================================
-% END OF REPORT SECTION 2.2.1
-% =================================================
+% =============================================================================
+
+% -----------------------------------------------------------------------------
+% Original supplied test-case PDF included unchanged within Chapter 3.
+% -----------------------------------------------------------------------------
+\clearpage
+\section{Test Cases}
+The original executed test-case document is included below without
+transcription or modification.
+
+\includepdf[pages=-,pagecommand={}]{Smart_City_Test_Cases.pdf}
+
+\chapter{Conclusion}
+% =============================================================================
+
+\section{Summary of Work}
+
+The project delivers a web-based civic complaint workflow with a React frontend, FastAPI backend, SQLAlchemy models, and PostgreSQL persistence. Citizens can register and sign in, submit and track complaints, and review status history. Officers can review complaints within their department, verify or reject them, and assign workers. Workers can accept assigned tasks, update progress and notes, submit completion photographs, and complete the work. Citizens can verify completed work and provide feedback. The design diagrams and project journals document the analysis, modelling, planning, and implementation stages.
+
+\section{Key Findings}
+
+\begin{itemize}
+\item A shared complaint identifier and status-history record provide a basis for lifecycle traceability.
+\item Role and ownership checks are performed by the API, while protected routes provide a corresponding frontend navigation boundary.
+\item A normalized relational model connects users, departments, categories, complaints, assignments, evidence, and feedback.
+\item The repository has meaningful implementation beyond a visual prototype, but a few dashboard and schema concepts are not complete operational features.
+\item Functional automation and measured non-functional evaluation are the main evidence gaps in the current submission.
+\end{itemize}
+
+\section{Future Work and Recommendations}
+
+\begin{enumerate}
+\item Add automated unit and integration tests for request validation, role boundaries, status transitions, evidence uploads, and rollback/error paths.
+\item Complete administrator APIs and connect the dashboard to persisted, permission-checked data.
+\item Implement notification delivery, reopening, and SLA escalation as explicit workflows with documented transition rules.
+\item Move uploaded evidence to managed durable storage and add backup, size limits, retention, and deployment configuration.
+\item Add observability and conduct measured load, latency, and usability evaluations with documented datasets and procedures.
+\item Consider duplicate detection, category suggestions, priority calculation, maps, and hotspot analysis as later increments; keep recommendations reviewable by a human officer.
+\item Improve deployment readiness with environment-specific API configuration, database migrations, and secure secret management.
+\end{enumerate}
+
+\section{Final Remarks}
+
+The implemented system demonstrates how requirements, UML models, role-specific interfaces, API operations, and relational data can be combined to manage a civic complaint from initial submission to resident verification. The present result is a functional academic project implementation with clearly identifiable gaps for further engineering. Completing the test suite, administrator workflow, and operational deployment controls would provide the strongest next step toward a more complete service.
+
+% =============================================================================
+
+\section{Project Deployment}
+
+The Smart City Civic Complaint and Management System is deployed
+and can be accessed through the following link:
+
+\begin{center}
+\href{https://smartcitycivic.netlify.app}
+{\textbf{\underline{Smart City Civic Complaint and Management System}}}
+\end{center}
+
+
+% =============================================================================
+\begin{thebibliography}{9}
+\addcontentsline{toc}{chapter}{Bibliography}
+
+\bibitem{testcases}
+Smart City Civic Complaint System, ``Test Cases TC-01: Check Invalid Login and
+TC-02: Submit a New Complaint,'' supplied project test-case document,
+20 November 2026.
+
+\bibitem{react}
+React Team, ``Quick Start,'' React Documentation. Available: \url{https://react.dev/learn}. Accessed 25 November 2026.
+
+\bibitem{fastapi}
+FastAPI Project, ``First Steps,'' FastAPI Documentation. Available: \url{https://fastapi.tiangolo.com/tutorial/first-steps/}. Accessed 25 November 2026.
+
+\bibitem{fastapi-security}
+FastAPI Project, ``OAuth2 with Password (and hashing), Bearer with JWT tokens,'' FastAPI Documentation. Available: \url{https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/}. Accessed 25 November 2026.
+
+\bibitem{sqlalchemy}
+SQLAlchemy authors, ``SQLAlchemy ORM,'' SQLAlchemy Documentation. Available: \url{https://docs.sqlalchemy.org/en/20/orm/}. Accessed 25 November 2026.
+
+\bibitem{postgresql}
+PostgreSQL Global Development Group, ``PostgreSQL 18 Documentation.'' Available: \url{https://www.postgresql.org/docs/18/}. Accessed 25 November 2026.
+
+\bibitem{jwt}
+M. Jones, J. Bradley, and N. Sakimura, ``JSON Web Token (JWT),'' RFC 7519, Internet Engineering Task Force, May 2015. Available: \url{https://datatracker.ietf.org/doc/html/rfc7519}.
+
+\end{thebibliography}
 
 \end{document}

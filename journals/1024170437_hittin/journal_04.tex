@@ -1,0 +1,226 @@
+\documentclass[12pt,a4paper]{article}
+
+% ---------------------------------------------------------
+% Packages
+% ---------------------------------------------------------
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{newtxtext,newtxmath}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+% ---------------------------------------------------------
+% Document formatting (following Journal 02)
+% ---------------------------------------------------------
+\setstretch{1.12}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+\titleformat{\section}
+{\large\bfseries}
+{\thesection.}{0.5em}{}
+
+\titleformat{\subsection}
+{\normalsize\bfseries}
+{\thesubsection}{0.5em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+\begin{document}
+
+% ---------------------------------------------------------
+% Title Page
+% ---------------------------------------------------------
+\begin{titlepage}
+\centering
+\vspace*{0.8in}
+
+{\Large\bfseries Smart City Civic Complaint and Management System\par}
+
+\vspace{0.25in}
+
+{\large\bfseries Software Engineering Project Journal -- 04\par}
+
+\vspace{0.8in}
+
+\textbf{Submitted to:}\par
+Nisha Thakur\par
+Thapar Institute of Engineering and Technology\par
+
+\vspace{0.45in}
+
+\textbf{Submitted by:}\par
+Hittin Gupta [1024170437]\par
+
+\vfill
+
+\textbf{Journal 04}\par
+Data Flow Diagram Design\par
+November 2026
+
+\end{titlepage}
+
+% ---------------------------------------------------------
+% 1. Objective
+% ---------------------------------------------------------
+\section{Objective}
+
+The objective of this journal is to document the preparation of Level 0 and
+Level 1 Data Flow Diagrams (DFDs) for the Smart City Civic Complaint and
+Management System.
+
+The main objectives were:
+
+\begin{itemize}[leftmargin=*]
+    \item To understand how information enters, moves through, and is stored
+    within the complaint management system.
+    \item To identify the external entities that interact with the system.
+    \item To prepare a Level 0 DFD representing the system as a single
+    high-level process.
+    \item To prepare a Level 1 DFD by decomposing the system into its major
+    internal processes.
+    \item To represent the data exchanged between citizens, department
+    officers, field workers, system processes, and the database.
+    \item To improve the clarity of the system design before final
+    documentation and evaluation.
+\end{itemize}
+
+% ---------------------------------------------------------
+% 2. Work Completed
+% ---------------------------------------------------------
+\section{Work Completed}
+
+During this phase, the existing system workflow and its major data
+interactions were studied. Based on the complaint lifecycle, two Data Flow
+Diagrams were prepared: a Level 0 Context Diagram and a Level 1 Process
+Decomposition Diagram.
+
+The diagrams were created to represent the movement of information between
+the users, the system processes, and the PostgreSQL database.
+
+The major activities completed were:
+
+\begin{enumerate}[leftmargin=*]
+    \item Identification of external entities interacting with the system.
+    \item Identification of the main inputs and outputs exchanged with each
+    external entity.
+    \item Preparation of the Level 0 DFD.
+    \item Decomposition of the system into five major processes for the
+    Level 1 DFD.
+    \item Representation of the PostgreSQL database as the central data store.
+    \item Review of the data flows and workflow hand-offs represented in
+    both diagrams.
+    \item Addition of the completed diagrams to the project documentation.
+\end{enumerate}
+
+% ---------------------------------------------------------
+% 3. Level 0 DFD
+% ---------------------------------------------------------
+\section{Level 0 Data Flow Diagram}
+
+The Level 0 DFD, also known as the Context Diagram, represents the complete
+Smart City Civic Complaint and Management System as a single process. It
+shows the external entities that communicate with the system and the major
+information exchanged between them.
+
+The three external entities represented are:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Citizen:} Provides registration and login details,
+    complaint information, category, location, photographs, and resolution
+    feedback. The system returns authentication results, complaint
+    acknowledgement, complaint ID, status, and resolution details.
+    \item \textbf{Department Officer:} Provides login details, complaint
+    verification or rejection decisions, remarks, and worker assignment
+    requests. The system provides complaint lists, complaint details,
+    history, available workers, and assignment results.
+    \item \textbf{Field Worker:} Provides login details, task acceptance,
+    work-start information, progress updates, work notes, and completion
+    evidence. The system provides assigned task details and complaint
+    information.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.96\textwidth,height=0.68\textheight,keepaspectratio]{assets/DFD_Level_0.pdf}
+    \caption{Level 0 Data Flow Diagram (Context Diagram)}
+    \label{fig:level0}
+\end{figure}
+
+% ---------------------------------------------------------
+% 4. Level 1 DFD
+% ---------------------------------------------------------
+\section{Level 1 Data Flow Diagram}
+
+The Level 1 DFD expands the main system process into five major processes.
+It provides a more detailed representation of how complaint-related data
+is processed and stored.
+
+The five processes represented are:
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{1.0 User Authentication and Role Validation:}
+    Handles user registration and login information and validates the
+    user's role before providing access.
+    \item \textbf{2.0 Complaint Submission and Evidence:}
+    Receives complaint details, category, location, and supporting
+    photographs from the citizen and records the submitted complaint.
+    \item \textbf{3.0 Officer Review and Assignment:}
+    Allows the department officer to review a complaint, provide a
+    verification decision, and assign a field worker.
+    \item \textbf{4.0 Worker Task Execution:}
+    Handles task acceptance, work progress, work notes, and completion
+    evidence submitted by the field worker.
+    \item \textbf{5.0 Tracking, Resolution and Feedback:}
+    Provides complaint status and history, supports citizen verification
+    of completed work, and records resolution feedback.
+\end{enumerate}
+
+The Level 1 diagram also represents the PostgreSQL database as the central
+data store. It contains information related to users, complaints,
+assignments, status history, complaint evidence, and feedback. The
+processes read from and write to this data store as required by their
+operations.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.98\textwidth,height=0.70\textheight,keepaspectratio]{assets/DFD_Level_1.pdf}
+    \caption{Level 1 Data Flow Diagram of the Smart City Civic Complaint and Management System}
+    \label{fig:level1}
+\end{figure}
+
+% ---------------------------------------------------------
+% 5. Outcome
+% ---------------------------------------------------------
+\section{Outcome}
+
+The Level 0 and Level 1 Data Flow Diagrams were prepared to document the
+system's data movement at two levels of abstraction. The Level 0 diagram
+provides an overall view of the system and its external interactions,
+whereas the Level 1 diagram explains the internal processes and their
+interaction with the PostgreSQL data store.
+
+These diagrams improve the understanding of the system's data flow and
+provide supporting documentation for the overall architecture and
+implementation of the Smart City Civic Complaint and Management System.
+
+% ---------------------------------------------------------
+% 6. Next Planned Work
+% ---------------------------------------------------------
+\section{Next Planned Work}
+
+The next stage will focus on reviewing the completed project documentation,
+checking the consistency of the diagrams with the implemented system, and
+preparing the final project submission and demonstration.
+
+\end{document}
